@@ -24,8 +24,9 @@ class TestUpdate(unittest.TestCase):
         session.begin(subtransactions=True)
 
         # check there are the correct number of entries in the database
-        count = session.query(schema.DictionaryEntry).count()
-        self.assertEqual(count, len(self.loader))
+        entries = session.query(schema.DictionaryEntry).all()
+        # session.query(schema.DictionaryEntry).count() seems to fail when using `setup.py test`
+        self.assertEqual(len(entries), len(self.loader))
 
         # check the polymorphism is working
         geodetic_datum = session.query(schema.DictionaryEntry).filter_by(identifier='urn:ogc:def:datum:EPSG::6277')[0]
