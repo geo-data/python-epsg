@@ -132,7 +132,7 @@ class GeodeticDatum(DictionaryEntry):
         object. Dates strings should be in the format 'YYYY-MM-DD'.
         """
 
-        if isinstance(date, datetime.date):
+        if isinstance(date, (datetime.date, type(None))):
             return date
         if isinstance(date, (str, unicode)):
             return datetime.datetime.strptime(date, '%Y-%m-%d').date()
