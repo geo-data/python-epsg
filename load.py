@@ -13,7 +13,7 @@ def getText(node):
     for child in node.childNodes:
         if child.nodeType == child.TEXT_NODE:
             txt.append(child.data)
-    return ''.join(txt)
+    return ''.join(txt).strip()
 
 class XML(object):
     """
@@ -22,7 +22,7 @@ class XML(object):
 
     map = None
     ns = None
-    
+
     def __init__(self, dom):
         self.dom = dom
         self.map = self.createMapping()
@@ -30,7 +30,7 @@ class XML(object):
 
     def getNamespaces(self):
         return dict(((k[6:], v) for k, v in self.dom.firstChild.attributes.items() if k.startswith('xmlns:')))
-        
+
     def createMapping(self):
         """
         Creates a mapping between URNs and XML objects
@@ -44,6 +44,9 @@ class XML(object):
 
     def __getitem__(self, key):
         return self.map[key]
+
+    def __contains__(self, key):
+        return key in self.map
 
     def keys(self):
         return self.map.keys()
@@ -109,14 +112,6 @@ class Loader(object):
         except IndexError:
             return None
 
-    def getFirstChildNodeDate(self, node, childName):
-        try:
-            date = getText(node.getElementsByTagName(childName)[0])
-        except IndexError:
-            return None
-
-        return datetime.strptime(date, '%Y-%m-%d').date()
-
     def getFirstChildAttributeValue(self, node, childName, attributeName):
         try:
             return node.getElementsByTagName(childName)[0].attributes[attributeName].value
@@ -130,7 +125,7 @@ class Loader(object):
             return None
 
         return loader(element)
-            
+
     def loadGeodeticDatum(self, element):
         identifier = self.getFirstChildNodeText(element, 'identifier')
         name = self.getFirstChildNodeText(element, 'name')
@@ -139,7 +134,7 @@ class Loader(object):
 
         instance.type = self.getFirstChildNodeText(element, 'epsg:type')
         instance.scope = self.getFirstChildNodeText(element, 'scope')
-        instance.realizationEpoch = self.getFirstChildNodeDate(element, 'realizationEpoch')
+        instance.realizationEpoch = self.getFirstChildNodeText(element, 'realizationEpoch')
         instance.remarks = self.getFirstChildNodeText(element, 'remarks')
         instance.anchorDefinition = self.getFirstChildNodeText(element, 'anchorDefinition')
         instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
@@ -154,7 +149,7 @@ class Loader(object):
         instance.remarks = self.getFirstChildNodeText(element, 'remarks')
         instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
         instance.greenwichLongitude = self.getFirstChildNodeText(element, 'greenwichLongitude')
-        
+
         return instance
 
     def load(self):
