@@ -95,4 +95,46 @@
       <greenwichLongitude uom="urn:ogc:def:uom:EPSG::9102">0</greenwichLongitude>
     </PrimeMeridian>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AreaOfUse xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" gml:id="ogp-area-1264">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2012-01-05</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="urn:ogc:def:change-request:EPSG::2005.880"/>
+            <epsg:changeID xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="urn:ogc:def:change-request:EPSG::2008.070"/>
+            <epsg:changeID xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="urn:ogc:def:change-request:EPSG::2010.019"/>
+            <epsg:changeID xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="urn:ogc:def:change-request:EPSG::2011.062"/>
+            <epsg:changeID xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="urn:ogc:def:change-request:EPSG::2011.082"/>
+          </epsg:changes>
+          <epsg:show>false</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:area:EPSG::1264</identifier>
+      <name>UK - Great Britain; Isle of Man</name>
+      <gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd">
+        <gmd:description>
+          <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">United Kingdom (UK) - Great Britain - England and Wales onshore, Scotland onshore and Western Isles nearshore; Isle of Man onshore.</gco:CharacterString>
+        </gmd:description>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+              <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">-8.73</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+              <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">1.83</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+              <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">49.81</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+              <gco:Decimal xmlns:gco="http://www.isotc211.org/2005/gco">60.89</gco:Decimal>
+            </gmd:northBoundLatitude>
+          </gmd:EX_GeographicBoundingBox>
+        </gmd:geographicElement>
+      </gmd:EX_Extent>
+    </epsg:AreaOfUse>
+  </dictionaryEntry>
 </Dictionary>

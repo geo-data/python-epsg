@@ -12,7 +12,7 @@ class TestXML(unittest.TestCase):
     def testKeys(self):
         keys = self.xml.keys()
         self.assertIsInstance(keys, list)
-        self.assertEqual(len(keys), 5)
+        self.assertEqual(len(keys), 6)
 
     def testContains(self):
         self.assertTrue('urn:ogc:def:datum:EPSG::6277' in self.xml)
@@ -37,7 +37,7 @@ class TestLoader(unittest.TestCase):
         self.assertIsInstance(obj, schema.GeodeticDatum)
     
     def testLoad(self):
-        expected_length = 2
+        expected_length = 3
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)

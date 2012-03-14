@@ -30,6 +30,17 @@ class SchemaBuilder(object):
                 'greenwichLongitude': '0'
                 })
 
+    def buildAreaOfUse(self):
+        return self.buildObject(schema.AreaOfUse, {
+                'identifier': 'urn:ogc:def:area:EPSG::1264',
+                'name': 'UK - Great Britain; Isle of Man',
+                'description': 'United Kingdom (UK) - Great Britain - England and Wales onshore, Scotland onshore and Western Isles nearshore; Isle of Man onshore.',
+                'westBoundLongitude': '-8.73',
+                'eastBoundLongitude': '1.83',
+                'southBoundLatitude': '49.81',
+                'northBoundLatitude': '60.89'
+                })
+
     def buildGeodeticDatum(self):
         obj = self.buildObject(schema.GeodeticDatum, {
                 'identifier': 'urn:ogc:def:datum:EPSG::6277',
@@ -82,6 +93,9 @@ class TestDictionaryEntry(unittest.TestCase):
         self.assertEqual(self.obj, obj)
 
 class TestPrimeMeridian(TestDictionaryEntry):
+    pass
+
+class TestAreaOfUse(TestDictionaryEntry):
     pass
 
 class TestGeodeticDatum(TestDictionaryEntry):

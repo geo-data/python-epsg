@@ -5,7 +5,7 @@ Functionality for reading and manipulating EPSG XML data
 from datetime import datetime
 import schema
 
-def getText(node):
+def getText(node, recurse=True):
     """
     Retrieve the text content of an XML node list
     """
@@ -13,6 +13,8 @@ def getText(node):
     for child in node.childNodes:
         if child.nodeType == child.TEXT_NODE:
             txt.append(child.data)
+        elif child.hasChildNodes():
+            txt.append(getText(child, recurse))
     return ''.join(txt).strip()
 
 class XML(object):
@@ -139,6 +141,7 @@ class Loader(object):
         instance.anchorDefinition = self.getFirstChildNodeText(element, 'anchorDefinition')
         instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
         instance.primeMeridian = self[self.getFirstChildAttributeValue(element, 'primeMeridian', 'xlink:href')]
+        instance.domainOfValidity = self[self.getFirstChildAttributeValue(element, 'domainOfValidity', 'xlink:href')]
         return instance
 
     def loadPrimeMeridian(self, element):
@@ -149,6 +152,19 @@ class Loader(object):
         instance.remarks = self.getFirstChildNodeText(element, 'remarks')
         instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
         instance.greenwichLongitude = self.getFirstChildNodeText(element, 'greenwichLongitude')
+
+        return instance
+
+    def loadAreaOfUse(self, element):
+        identifier = self.getFirstChildNodeText(element, 'identifier')
+        name = self.getFirstChildNodeText(element, 'name')
+
+        instance = schema.AreaOfUse(identifier, name)
+        instance.description = self.getFirstChildNodeText(element, 'gmd:description')
+        instance.westBoundLongitude = self.getFirstChildNodeText(element, 'gmd:westBoundLongitude')
+        instance.eastBoundLongitude = self.getFirstChildNodeText(element, 'gmd:eastBoundLongitude')
+        instance.southBoundLongitude = self.getFirstChildNodeText(element, 'gmd:southBoundLongitude')
+        instance.northBoundLongitude = self.getFirstChildNodeText(element, 'gmd:northBoundLongitude')
 
         return instance
 

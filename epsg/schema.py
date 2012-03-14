@@ -56,6 +56,26 @@ class PrimeMeridian(DictionaryEntry):
             self.greenwichLongitude == other.greenwichLongitude
             )
 
+class AreaOfUse(DictionaryEntry):
+    __mapper_args__ = { "polymorphic_identity": 'AreaOfUse' }
+
+    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
+    description = Column(String)
+    westBoundLongitude = Column(Float)
+    eastBoundLongitude = Column(Float)
+    southBoundLongitude = Column(Float)
+    northBoundLongitude = Column(Float)
+
+    def __eq__(self, other):
+        return (
+            super(AreaOfUse, self).__eq__(other) and
+            self.description == other.description and
+            self.westBoundLongitude == other.westBoundLongitude and
+            self.eastBoundLongitude == other.eastBoundLongitude and
+            self.southBoundLongitude == other.southBoundLongitude and
+            self.northBoundLongitude == other.northBoundLongitude
+            )
+
 class GeodeticDatum(DictionaryEntry):
     __mapper_args__ = { "polymorphic_identity": 'GeodeticDatum' }
 
@@ -64,10 +84,18 @@ class GeodeticDatum(DictionaryEntry):
     realizationEpoch = Column(Date)
     type = Column(String(255), nullable=False)
     informationSource = Column(String)
+
     primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
     primeMeridian = relationship(
         "PrimeMeridian",
         primaryjoin = 'GeodeticDatum.primeMeridian_id==PrimeMeridian.identifier',
+        uselist=False
+        )
+
+    domainOfValidity_id = Column(String(255), ForeignKey('AreaOfUse.identifier'))
+    domainOfValidity = relationship(
+        "AreaOfUse",
+        primaryjoin = 'GeodeticDatum.domainOfValidity_id==AreaOfUse.identifier',
         uselist=False
         )
 

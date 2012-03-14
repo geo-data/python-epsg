@@ -32,6 +32,9 @@ class TestUpdate(unittest.TestCase):
         geodetic_datum = session.query(schema.DictionaryEntry).filter_by(identifier='urn:ogc:def:datum:EPSG::6277')[0]
         self.assertIsInstance(geodetic_datum, schema.GeodeticDatum)
 
+        # check the loading of children is working
+        self.assertIsInstance(geodetic_datum.domainOfValidity, schema.AreaOfUse)
+
         # all done
         session.commit()
 
