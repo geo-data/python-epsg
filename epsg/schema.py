@@ -76,6 +76,24 @@ class AreaOfUse(DictionaryEntry):
             self.northBoundLongitude == other.northBoundLongitude
             )
 
+class Ellipsoid(DictionaryEntry):
+    __mapper_args__ = { "polymorphic_identity": 'Ellipsoid' }
+
+    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
+    semiMajorAxis = Column(Float)
+    semiMinorAxis = Column(Float)
+    inverseFlattening = Column(Float)
+    isSphere = Column(String(50))
+
+    def __eq__(self, other):
+        return (
+            super(Ellipsoid, self).__eq__(other) and
+            self.semiMajorAxis == other.semiMajorAxis and
+            self.semiMinorAxis == other.semiMinorAxis and
+            self.inverseFlattening == other.inverseFlattening and
+            self.isSphere == other.isSphere
+            )
+
 class GeodeticDatum(DictionaryEntry):
     __mapper_args__ = { "polymorphic_identity": 'GeodeticDatum' }
 
@@ -83,7 +101,6 @@ class GeodeticDatum(DictionaryEntry):
     scope = Column(String(255), nullable=False)
     realizationEpoch = Column(Date)
     type = Column(String(255), nullable=False)
-    informationSource = Column(String)
 
     primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
     primeMeridian = relationship(
@@ -96,6 +113,13 @@ class GeodeticDatum(DictionaryEntry):
     domainOfValidity = relationship(
         "AreaOfUse",
         primaryjoin = 'GeodeticDatum.domainOfValidity_id==AreaOfUse.identifier',
+        uselist=False
+        )
+
+    ellipsoid_id = Column(String(255), ForeignKey('Ellipsoid.identifier'))
+    ellipsoid = relationship(
+        "Ellipsoid",
+        primaryjoin = 'GeodeticDatum.ellipsoid_id==Ellipsoid.identifier',
         uselist=False
         )
 

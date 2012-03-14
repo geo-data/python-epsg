@@ -30,6 +30,16 @@ class SchemaBuilder(object):
                 'greenwichLongitude': '0'
                 })
 
+    def buildEllipsoid(self):
+        return self.buildObject(schema.Ellipsoid, {
+                'identifier': 'urn:ogc:def:ellipsoid:EPSG::7001',
+                'name': 'Airy 1830',
+                'informationSource': 'Ordnance Survey of Great Britain.',
+                'remarks': u'Original definition is a=20923713, b=20853810 feet of 1796. 1/f is given to 7 decimal places. For the 1936 retriangulation OSGB defines the relationship of 10 feet of 1796 to the International metre through ([10^0.48401603]/10) exactly = 0.3048007491...',
+                'semiMajorAxis': '6377563.396',
+                'inverseFlattening': '299.3249646'
+                })
+
     def buildAreaOfUse(self):
         return self.buildObject(schema.AreaOfUse, {
                 'identifier': 'urn:ogc:def:area:EPSG::1264',
@@ -96,6 +106,9 @@ class TestPrimeMeridian(TestDictionaryEntry):
     pass
 
 class TestAreaOfUse(TestDictionaryEntry):
+    pass
+
+class TestEllipsoid(TestDictionaryEntry):
     pass
 
 class TestGeodeticDatum(TestDictionaryEntry):

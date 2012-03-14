@@ -128,38 +128,45 @@ class Loader(object):
 
         return loader(element)
 
-    def loadGeodeticDatum(self, element):
+    def loadDictionaryEntry(self, element, class_=schema.DictionaryEntry):
         identifier = self.getFirstChildNodeText(element, 'identifier')
         name = self.getFirstChildNodeText(element, 'name')
 
-        instance = schema.GeodeticDatum(identifier, name)
+        instance = class_(identifier, name)
+        instance.remarks = self.getFirstChildNodeText(element, 'remarks')
+        instance.anchorDefinition = self.getFirstChildNodeText(element, 'anchorDefinition')
+        instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
+
+        return instance
+
+    def loadGeodeticDatum(self, element):
+        instance = self.loadDictionaryEntry(element, schema.GeodeticDatum)
 
         instance.type = self.getFirstChildNodeText(element, 'epsg:type')
         instance.scope = self.getFirstChildNodeText(element, 'scope')
         instance.realizationEpoch = self.getFirstChildNodeText(element, 'realizationEpoch')
-        instance.remarks = self.getFirstChildNodeText(element, 'remarks')
-        instance.anchorDefinition = self.getFirstChildNodeText(element, 'anchorDefinition')
-        instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
         instance.primeMeridian = self[self.getFirstChildAttributeValue(element, 'primeMeridian', 'xlink:href')]
         instance.domainOfValidity = self[self.getFirstChildAttributeValue(element, 'domainOfValidity', 'xlink:href')]
+        instance.ellipsoid = self[self.getFirstChildAttributeValue(element, 'ellipsoid', 'xlink:href')]
+        return instance
+
+    def loadEllipsoid(self, element):
+        instance = self.loadDictionaryEntry(element, schema.Ellipsoid)
+        instance.semiMajorAxis = self.getFirstChildNodeText(element, 'semiMajorAxis')
+        instance.semiMinorAxis = self.getFirstChildNodeText(element, 'semiMinorAxis')
+        instance.inverseFlattening = self.getFirstChildNodeText(element, 'inverseFlattening')
+        instance.isSphere = self.getFirstChildNodeText(element, 'isSphere')
+
         return instance
 
     def loadPrimeMeridian(self, element):
-        identifier = self.getFirstChildNodeText(element, 'identifier')
-        name = self.getFirstChildNodeText(element, 'name')
-
-        instance = schema.PrimeMeridian(identifier, name)
-        instance.remarks = self.getFirstChildNodeText(element, 'remarks')
-        instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
+        instance = self.loadDictionaryEntry(element, schema.PrimeMeridian)
         instance.greenwichLongitude = self.getFirstChildNodeText(element, 'greenwichLongitude')
 
         return instance
 
     def loadAreaOfUse(self, element):
-        identifier = self.getFirstChildNodeText(element, 'identifier')
-        name = self.getFirstChildNodeText(element, 'name')
-
-        instance = schema.AreaOfUse(identifier, name)
+        instance = self.loadDictionaryEntry(element, schema.AreaOfUse)
         instance.description = self.getFirstChildNodeText(element, 'gmd:description')
         instance.westBoundLongitude = self.getFirstChildNodeText(element, 'gmd:westBoundLongitude')
         instance.eastBoundLongitude = self.getFirstChildNodeText(element, 'gmd:eastBoundLongitude')

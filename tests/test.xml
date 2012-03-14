@@ -137,4 +137,29 @@
       </gmd:EX_Extent>
     </epsg:AreaOfUse>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <Ellipsoid xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-ellipsoid-7001">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>Ordnance Survey of Great Britain.</epsg:informationSource>
+          <epsg:revisionDate>2006-11-27</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::1998.321"/>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::1998.340"/>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2006.932"/>
+          </epsg:changes>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:ellipsoid:EPSG::7001</identifier>
+      <name>Airy 1830</name>
+      <remarks>Original definition is a=20923713, b=20853810 feet of 1796. 1/f is given to 7 decimal places. For the 1936 retriangulation OSGB defines the relationship of 10 feet of 1796 to the International metre through ([10^0.48401603]/10) exactly = 0.3048007491...</remarks>
+      <semiMajorAxis uom="urn:ogc:def:uom:EPSG::9001">6377563.396</semiMajorAxis>
+      <secondDefiningParameter>
+        <SecondDefiningParameter>
+          <inverseFlattening uom="urn:ogc:def:uom:EPSG::9201">299.3249646</inverseFlattening>
+        </SecondDefiningParameter>
+      </secondDefiningParameter>
+    </Ellipsoid>
+  </dictionaryEntry>
 </Dictionary>
