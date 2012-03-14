@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dictionary xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns="http://www.opengis.net/gml" gml:id="release-7.9.6">
+  <description>Release for version 7.9.6</description>
+  <identifier codeSpace="OGP">release-7.9.6</identifier>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <ProjectedCRS xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-crs-27700">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>projected</epsg:type>
+          <epsg:alias alias="British National Grid" code="1002" codeSpace="urn:ogc:def:naming-system:EPSG::7302"/>
+          <epsg:alias alias="(GB_OSGB36 / NATIONALGRID - see alias remarks)" code="2916" codeSpace="urn:ogc:def:naming-system:EPSG::7307">
+            <epsg:remarks>This EuroGeographics identifier is for a CRS similar to this but with CS axes in order north, east.</epsg:remarks>
+          </epsg:alias>
+          <epsg:informationSource>Ordnance Survey of Great Britain.</epsg:informationSource>
+          <epsg:revisionDate>2005-05-27</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2003.010"/>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2005.180"/>
+          </epsg:changes>
+          <epsg:show>true</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:crs:EPSG::27700</identifier>
+      <name>OSGB 1936 / British National Grid</name>
+      <domainOfValidity xlink:href="urn:ogc:def:area:EPSG::1264"/>
+      <scope>Large and medium scale topographic mapping and engineering survey.</scope>
+      <conversion xlink:href="urn:ogc:def:coordinateOperation:EPSG::19916"/>
+      <baseGeodeticCRS xlink:href="urn:ogc:def:crs:EPSG::4277"/>
+      <cartesianCS xlink:href="urn:ogc:def:cs:EPSG::4400"/>
+    </ProjectedCRS>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <GeodeticCRS xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-crs-4277">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>geographic 2D</epsg:type>
+          <epsg:revisionDate>2004-01-06</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2003.370"/>
+          </epsg:changes>
+          <epsg:show>true</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:crs:EPSG::4277</identifier>
+      <name>OSGB 1936</name>
+      <domainOfValidity xlink:href="urn:ogc:def:area:EPSG::1264"/>
+      <scope>Geodetic survey.</scope>
+      <ellipsoidalCS xlink:href="urn:ogc:def:cs:EPSG::6422"/>
+      <geodeticDatum xlink:href="urn:ogc:def:datum:EPSG::6277"/>
+    </GeodeticCRS>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <GeodeticDatum xmlns:gml="http://www.opengis.net/gml" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="ogp-datum-6277">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>geodetic</epsg:type>
+          <epsg:informationSource>Ordnance Survey of Great Britain</epsg:informationSource>
+          <epsg:revisionDate>2011-03-14</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2002.620"/>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2008.045"/>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2009.055"/>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2010.106"/>
+          </epsg:changes>
+          <epsg:show>true</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:datum:EPSG::6277</identifier>
+      <name>OSGB 1936</name>
+      <remarks>The average accuracy of OSTN02 compared to the old triangulation network (down to 3rd order) is 0.1m.</remarks>
+      <domainOfValidity xlink:href="urn:ogc:def:area:EPSG::1264"/>
+      <scope>Topographic mapping.</scope>
+      <anchorDefinition>From April 2002 the datum is defined through the application of the OSTN02 transformation (tfm code 1039) to ETRS89. Prior to 2002, fundamental point: Herstmonceux, Latitude: 50°51'55.271"N, longitude: 0°20'45.882"E (of Greenwich).</anchorDefinition>
+      <realizationEpoch>1936-01-01</realizationEpoch>
+      <primeMeridian xlink:href="urn:ogc:def:meridian:EPSG::8901"/>
+      <ellipsoid xlink:href="urn:ogc:def:ellipsoid:EPSG::7001"/>
+    </GeodeticDatum>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <PrimeMeridian xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-meridian-8901">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:revisionDate>1995-06-02</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::1996.290"/>
+          </epsg:changes>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:meridian:EPSG::8901</identifier>
+      <name>Greenwich</name>
+      <greenwichLongitude uom="urn:ogc:def:uom:EPSG::9102">0</greenwichLongitude>
+    </PrimeMeridian>
+  </dictionaryEntry>
+</Dictionary>
