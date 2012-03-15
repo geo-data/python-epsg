@@ -9,6 +9,39 @@ import datetime
 
 Base = declarative_base()
 
+# Mixins
+
+class TypeMixin(object):
+    """
+    Added to classes that require a type and a scope
+    """
+
+    @declared_attr
+    def type(cls):
+        return Column(String(255), nullable=False)
+
+    @declared_attr
+    def scope(cls):
+        return Column(String(255), nullable=False)
+
+class DomainOfValidityMixin(object):
+    """
+    Added to classes that require domainOfValidity
+    """
+    @declared_attr
+    def domainOfValidity_id(cls):
+        return Column(String(255), ForeignKey('AreaOfUse.identifier'))
+
+    @declared_attr
+    def domainOfValidity(cls):
+        return relationship(
+            "AreaOfUse",
+            primaryjoin = '%s.domainOfValidity_id==AreaOfUse.identifier' % cls.__name__,
+            uselist=False
+            )
+
+# Classes
+
 class DictionaryEntry(Base):
 
     identifier = Column(String(255), primary_key=True)
@@ -94,25 +127,16 @@ class Ellipsoid(DictionaryEntry):
             self.isSphere == other.isSphere
             )
 
-class GeodeticDatum(DictionaryEntry):
+class GeodeticDatum(TypeMixin, DomainOfValidityMixin, DictionaryEntry):
     __mapper_args__ = { "polymorphic_identity": 'GeodeticDatum' }
 
     identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
-    scope = Column(String(255), nullable=False)
     realizationEpoch = Column(Date)
-    type = Column(String(255), nullable=False)
 
     primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
     primeMeridian = relationship(
         "PrimeMeridian",
         primaryjoin = 'GeodeticDatum.primeMeridian_id==PrimeMeridian.identifier',
-        uselist=False
-        )
-
-    domainOfValidity_id = Column(String(255), ForeignKey('AreaOfUse.identifier'))
-    domainOfValidity = relationship(
-        "AreaOfUse",
-        primaryjoin = 'GeodeticDatum.domainOfValidity_id==AreaOfUse.identifier',
         uselist=False
         )
 
@@ -150,3 +174,32 @@ class GeodeticDatum(DictionaryEntry):
             self.informationSource == other.informationSource and
             self.primeMeridian == other.primeMeridian
             )
+
+class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, DictionaryEntry):
+    """
+    A Base class for a coordinate reference system
+
+    This should not be instantiated directly as it has not
+    corresponding GML entity.
+    """
+    __mapper_args__ = { "polymorphic_identity": 'CoordinateReferenceSystem' }
+
+    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
+
+    geodeticDatum_id = Column(String(255), ForeignKey('GeodeticDatum.identifier'))
+    geodeticDatum = relationship(
+        "GeodeticDatum",
+        primaryjoin = 'CoordinateReferenceSystem.geodeticDatum_id==GeodeticDatum.identifier',
+        uselist=False
+        )
+
+    def __eq__(self, other):
+        return (
+            super(CoordinateReferenceSystem, self).__eq__(other) and
+            self.geodeticDatum == other.geodeticDatum
+            )
+
+class GeodeticCRS(CoordinateReferenceSystem):
+    __mapper_args__ = { "polymorphic_identity": 'GeodeticCRS' }
+
+    identifier = Column(String(255), ForeignKey('CoordinateReferenceSystem.identifier'), primary_key=True)

@@ -71,6 +71,33 @@ class XML(object):
         dom = parse(xml_file)
         return cls(dom)
 
+# Decorators
+#
+# These add various attributes to created instances by extracting the
+# data from the XML. They are synonymous with the Mixins in the schema
+# module.
+
+def addType(method):
+    """
+    Add type and scope attributes
+    """
+    def wrapper(self, element, *args, **kwargs):
+        instance = method(self, element, *args, **kwargs)
+        instance.type = self.getFirstChildNodeText(element, 'epsg:type')
+        instance.scope = self.getFirstChildNodeText(element, 'scope')
+        return instance
+    return wrapper
+
+def addDomainOfValidity(method):
+    """
+    Add the domainOfValidity attribute
+    """
+    def wrapper(self, element, *args, **kwargs):
+        instance = method(self, element, *args, **kwargs)
+        instance.domainOfValidity = self[self.getFirstChildAttributeValue(element, 'domainOfValidity', 'xlink:href')]
+        return instance
+    return wrapper
+
 class Loader(object):
     """
     Create EPSG schema objects from XML
@@ -139,14 +166,13 @@ class Loader(object):
 
         return instance
 
+    @addType
+    @addDomainOfValidity
     def loadGeodeticDatum(self, element):
         instance = self.loadDictionaryEntry(element, schema.GeodeticDatum)
 
-        instance.type = self.getFirstChildNodeText(element, 'epsg:type')
-        instance.scope = self.getFirstChildNodeText(element, 'scope')
         instance.realizationEpoch = self.getFirstChildNodeText(element, 'realizationEpoch')
         instance.primeMeridian = self[self.getFirstChildAttributeValue(element, 'primeMeridian', 'xlink:href')]
-        instance.domainOfValidity = self[self.getFirstChildAttributeValue(element, 'domainOfValidity', 'xlink:href')]
         instance.ellipsoid = self[self.getFirstChildAttributeValue(element, 'ellipsoid', 'xlink:href')]
         return instance
 
@@ -172,6 +198,17 @@ class Loader(object):
         instance.eastBoundLongitude = self.getFirstChildNodeText(element, 'gmd:eastBoundLongitude')
         instance.southBoundLatitude = self.getFirstChildNodeText(element, 'gmd:southBoundLatitude')
         instance.northBoundLatitude = self.getFirstChildNodeText(element, 'gmd:northBoundLatitude')
+
+        return instance
+
+    @addType
+    @addDomainOfValidity
+    def loadCoordinateReferenceSystem(self, element, class_):
+        return self.loadDictionaryEntry(element, class_)
+
+    def loadGeodeticCRS(self, element):
+        instance = self.loadCoordinateReferenceSystem(element, schema.GeodeticCRS)
+        instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]
 
         return instance
 

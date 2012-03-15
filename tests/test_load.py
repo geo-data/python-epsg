@@ -45,10 +45,10 @@ class TestLoader(unittest.TestCase):
         self.assertIsInstance(obj, schema.Ellipsoid)
 
     def testLoad(self):
-        expected_length = 4
+        expected_length = 5
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)
-    
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

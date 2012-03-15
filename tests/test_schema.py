@@ -65,6 +65,17 @@ class SchemaBuilder(object):
         obj.primeMeridian = self.buildPrimeMeridian()
         return obj
 
+    def buildGeodeticCRS(self):
+        obj = self.buildObject(schema.GeodeticCRS, {
+                'identifier': 'urn:ogc:def:crs:EPSG::4277',
+                'name': 'OSGB 1936',
+                'scope': 'Geodetic survey.',
+                'type': 'geographic 2D'
+                })
+
+        obj.geodeticDatum = self.buildGeodeticDatum()
+        return obj
+
 class TestDictionaryEntry(unittest.TestCase):
     """
     A base class used for testing schema objects
@@ -112,6 +123,9 @@ class TestEllipsoid(TestDictionaryEntry):
     pass
 
 class TestGeodeticDatum(TestDictionaryEntry):
+    pass
+
+class TestGeodeticCRS(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':
