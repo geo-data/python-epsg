@@ -63,8 +63,8 @@ class AreaOfUse(DictionaryEntry):
     description = Column(String)
     westBoundLongitude = Column(Float)
     eastBoundLongitude = Column(Float)
-    southBoundLongitude = Column(Float)
-    northBoundLongitude = Column(Float)
+    southBoundLatitude = Column(Float)
+    northBoundLatitude = Column(Float)
 
     def __eq__(self, other):
         return (
@@ -72,8 +72,8 @@ class AreaOfUse(DictionaryEntry):
             self.description == other.description and
             self.westBoundLongitude == other.westBoundLongitude and
             self.eastBoundLongitude == other.eastBoundLongitude and
-            self.southBoundLongitude == other.southBoundLongitude and
-            self.northBoundLongitude == other.northBoundLongitude
+            self.southBoundLatitude == other.southBoundLatitude and
+            self.northBoundLatitude == other.northBoundLatitude
             )
 
 class Ellipsoid(DictionaryEntry):

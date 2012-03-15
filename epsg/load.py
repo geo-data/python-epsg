@@ -170,8 +170,8 @@ class Loader(object):
         instance.description = self.getFirstChildNodeText(element, 'gmd:description')
         instance.westBoundLongitude = self.getFirstChildNodeText(element, 'gmd:westBoundLongitude')
         instance.eastBoundLongitude = self.getFirstChildNodeText(element, 'gmd:eastBoundLongitude')
-        instance.southBoundLongitude = self.getFirstChildNodeText(element, 'gmd:southBoundLongitude')
-        instance.northBoundLongitude = self.getFirstChildNodeText(element, 'gmd:northBoundLongitude')
+        instance.southBoundLatitude = self.getFirstChildNodeText(element, 'gmd:southBoundLatitude')
+        instance.northBoundLatitude = self.getFirstChildNodeText(element, 'gmd:northBoundLatitude')
 
         return instance
 
