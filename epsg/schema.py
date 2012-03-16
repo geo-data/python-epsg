@@ -57,6 +57,24 @@ class DomainOfValidityMixin(object):
             uselist=False
             )
 
+def IdentifierJoinMixin(join_class):
+    """
+    Add an `identifier` column that relates to another class
+
+    This is a factory function that generates a mixin. `join_class` is
+    the name of the other class specified in the foreign key
+    relationship.
+    """
+
+    class Mixin(object):
+        @declared_attr
+        def identifier(cls):
+            fk = '%s.identifier' % join_class
+            return Column(String(255), ForeignKey(fk), primary_key=True)
+
+    return Mixin
+
+
 # Classes
 
 class DictionaryEntry(Base):
@@ -94,9 +112,8 @@ class DictionaryEntry(Base):
             self.anchorDefinition == other.anchorDefinition
             )
 
-class PrimeMeridian(DictionaryEntry):
+class PrimeMeridian(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
-    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     greenwichLongitude = Column(Float)
 
     def __eq__(self, other):
@@ -105,9 +122,8 @@ class PrimeMeridian(DictionaryEntry):
             self.greenwichLongitude == other.greenwichLongitude
             )
 
-class AreaOfUse(DictionaryEntry):
+class AreaOfUse(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
-    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     description = Column(String)
     westBoundLongitude = Column(Float)
     eastBoundLongitude = Column(Float)
@@ -124,9 +140,8 @@ class AreaOfUse(DictionaryEntry):
             self.northBoundLatitude == other.northBoundLatitude
             )
 
-class Ellipsoid(DictionaryEntry):
+class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
-    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     semiMajorAxis = Column(Float)
     semiMinorAxis = Column(Float)
     inverseFlattening = Column(Float)
@@ -141,9 +156,8 @@ class Ellipsoid(DictionaryEntry):
             self.isSphere == other.isSphere
             )
 
-class GeodeticDatum(TypeMixin, DomainOfValidityMixin, DictionaryEntry):
+class GeodeticDatum(TypeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
-    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     realizationEpoch = Column(Date)
 
     primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
@@ -188,15 +202,13 @@ class GeodeticDatum(TypeMixin, DomainOfValidityMixin, DictionaryEntry):
             self.primeMeridian == other.primeMeridian
             )
 
-class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, DictionaryEntry):
+class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     """
     A Base class for a coordinate reference system
 
     This should not be instantiated directly as it has not
     corresponding GML entity.
     """
-
-    identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
 
     geodeticDatum_id = Column(String(255), ForeignKey('GeodeticDatum.identifier'))
     geodeticDatum = relationship(
@@ -211,6 +223,5 @@ class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, DictionaryEntr
             self.geodeticDatum == other.geodeticDatum
             )
 
-class GeodeticCRS(CoordinateReferenceSystem):
-
-    identifier = Column(String(255), ForeignKey('CoordinateReferenceSystem.identifier'), primary_key=True)
+class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
+    pass
