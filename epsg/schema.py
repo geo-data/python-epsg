@@ -22,6 +22,7 @@ class MetaBase(DeclarativeMeta):
 
     def __new__(cls, name, bases, dct):
 
+        # Add the equality operator
         def eq(self, other):
             def compareAttrs():
                 for attr in (key for key in self.__dict__.keys() if not key.startswith('_')):
@@ -35,13 +36,15 @@ class MetaBase(DeclarativeMeta):
                 )
         dct['__eq__'] = eq
 
-        return super(MetaBase, cls).__new__(cls, name, bases, dct)
+        # Add the polymorphic identity, based on the class name
+        if '_decl_class_registry' not in dct:
+            mapper_args = {'polymorphic_identity': name}
+            if '__mapper_args__' in dct:
+                dct['__mapper_args__'].update(mapper_args)
+            else:
+                dct['__mapper_args__'] = mapper_args
 
-    def __init__(cls, *args, **kw):
-        if getattr(cls, '_decl_class_registry', None) is None:
-            return # they use this in the docs, so maybe its not a bad idea
-        cls.__mapper_args__ = {'polymorphic_identity': cls.__name__}
-        return super(MetaBase, cls).__init__(*args, **kw)
+        return super(MetaBase, cls).__new__(cls, name, bases, dct)
 
 # Create a SQLAlchemy declarative base class using our metaclass
 Base = declarative_base(metaclass=MetaBase)
@@ -245,7 +248,8 @@ class AxisName(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), Diction
 class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
     baseGeodeticCRS_id = Column(String(255), ForeignKey('GeodeticCRS.identifier'))
     baseGeodeticCRS = relationship(
-        "GeodeticCRS",
-        primaryjoin = 'ProjectedCRS.baseGeodeticCRS_id==GeodeticCRS.identifier',
+        "CoordinateReferenceSystem",
+        primaryjoin = 'ProjectedCRS.baseGeodeticCRS_id==CoordinateReferenceSystem.identifier',
+        foreign_keys = [baseGeodeticCRS_id],
         uselist=False
         )
