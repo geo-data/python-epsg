@@ -216,9 +216,15 @@ class Loader(object):
         instance = schema.CoordinateSystemAxis(identifier)
         instance.axisAbbrev = self.getFirstChildNodeText(element, 'axisAbbrev')
         instance.axisDirection = self.getFirstChildNodeText(element, 'axisDirection')
+        instance.descriptionReference = self[self.getFirstChildAttributeValue(element, 'descriptionReference', 'xlink:href')]
 
         return instance
-    
+
+    def loadAxisName(self, element):
+        instance = self.loadDictionaryEntry(element, schema.AxisName)
+        instance.description = self.getFirstChildNodeText(element, 'description')
+        return instance
+
     @addType
     def loadEllipsoidalCS(self, element):
         instance = self.loadDictionaryEntry(element, schema.EllipsoidalCS)

@@ -94,7 +94,14 @@ class SchemaBuilder(object):
             self.buildCoordinateSystemAxis({  # custom properties
                     'identifier': 'urn:ogc:def:axis:EPSG::107',
                     'axisAbbrev': 'Long',
-                    'axisDirection': 'east'
+                    'axisDirection': 'east',
+                    'descriptionReference': {
+                        'identifier': 'urn:ogc:def:axis-name:EPSG::9902',
+                        'name': 'Geodetic longitude',
+                        'remarks': 'Used in geographic 2D and geographic 3D coordinate reference systems.',
+                        'description': 'Angle from the prime meridian plane to the meridian plane passing through the given point, eastwards usually treated as positive.',
+                        'informationSource': 'OGP'
+                        }
                     })
             ]
         obj.axes = axes
@@ -110,8 +117,24 @@ class SchemaBuilder(object):
         if properties:
             default_properties.update(properties)
 
-        return self.buildObject(schema.CoordinateSystemAxis, ['identifier'], default_properties)
+        descriptionReference = default_properties.pop('descriptionReference', None)
 
+        obj = self.buildObject(schema.CoordinateSystemAxis, ['identifier'], default_properties)
+        obj.descriptionReference = self.buildAxisName(descriptionReference)
+        return obj
+
+    def buildAxisName(self, properties=None):
+        default_properties = {
+            'identifier': 'urn:ogc:def:axis-name:EPSG::9901',
+            'name': 'Geodetic latitude',
+            'description': 'Angle from the equatorial plane to the perpendicular to the ellipsoid through a given point, northwards usually treated as positive.',
+            'remarks': 'Used in geographic 2D and geographic 3D coordinate reference systems.',
+            'informationSource': 'OGP'
+            }
+        if properties:
+            default_properties.update(properties)
+
+        return self.buildDictionaryEntry(schema.AxisName, properties)
 
 class TestDictionaryEntry(unittest.TestCase):
     """
@@ -169,6 +192,9 @@ class TestEllipsoidalCS(TestDictionaryEntry):
     pass
 
 class TestCoordinateSystemAxis(TestDictionaryEntry):
+    pass
+
+class TestAxisName(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':

@@ -196,4 +196,34 @@
       </axis>
     </EllipsoidalCS>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9901">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2000-03-07</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>Angle from the equatorial plane to the perpendicular to the ellipsoid through a given point, northwards usually treated as positive.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9901</identifier>
+      <name>Geodetic latitude</name>
+      <remarks>Used in geographic 2D and geographic 3D coordinate reference systems.</remarks>
+    </epsg:AxisName>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9902">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2000-03-07</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>Angle from the prime meridian plane to the meridian plane passing through the given point, eastwards usually treated as positive.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9902</identifier>
+      <name>Geodetic longitude</name>
+      <remarks>Used in geographic 2D and geographic 3D coordinate reference systems.</remarks>
+    </epsg:AxisName>
+  </dictionaryEntry>
 </Dictionary>

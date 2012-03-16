@@ -12,7 +12,7 @@ class TestXML(unittest.TestCase):
     def testKeys(self):
         keys = self.xml.keys()
         self.assertIsInstance(keys, list)
-        self.assertEqual(len(keys), 10)
+        self.assertEqual(len(keys), 12)
 
     def testContains(self):
         self.assertTrue('urn:ogc:def:datum:EPSG::6277' in self.xml)
@@ -59,9 +59,13 @@ class TestLoader(unittest.TestCase):
     def testCoordinateSystemAxis(self):
         obj = self.loader['urn:ogc:def:axis:EPSG::106']
         self.assertIsInstance(obj, schema.CoordinateSystemAxis)
+
+    def testAxisName(self):
+        obj = self.loader['urn:ogc:def:axis-name:EPSG::9901']
+        self.assertIsInstance(obj, schema.AxisName)
         
     def testLoad(self):
-        expected_length = 8
+        expected_length = 10
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)

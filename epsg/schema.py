@@ -82,6 +82,14 @@ class DomainOfValidityMixin(object):
             uselist=False
             )
 
+class DescriptionMixin(object):
+    """
+    Added to classes that require a description attribute
+    """
+    @declared_attr
+    def description(cls):
+        return Column(String)
+
 def IdentifierJoinMixin(join_class):
     """
     Add an `identifier` column that relates to another class
@@ -127,7 +135,6 @@ class Identifier(Base):
         return "<%s('%s')>" % (self.__class__.__name__, self.identifier)
 
 class DictionaryEntry(IdentifierJoinMixin('Identifier'), Identifier):
-
     name = Column(String(255), nullable=False)
     remarks = Column(String)
     informationSource = Column(String)
@@ -141,26 +148,21 @@ class DictionaryEntry(IdentifierJoinMixin('Identifier'), Identifier):
         return "<%s('%s','%s')>" % (self.__class__.__name__, self.identifier, self.name)
 
 class PrimeMeridian(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-
     greenwichLongitude = Column(Float)
 
-class AreaOfUse(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-
-    description = Column(String)
+class AreaOfUse(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     westBoundLongitude = Column(Float)
     eastBoundLongitude = Column(Float)
     southBoundLatitude = Column(Float)
     northBoundLatitude = Column(Float)
 
 class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-
     semiMajorAxis = Column(Float, nullable=False)
     semiMinorAxis = Column(Float)
     inverseFlattening = Column(Float)
     isSphere = Column(String(50))
 
 class GeodeticDatum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-
     realizationEpoch = Column(Date)
 
     primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
@@ -229,3 +231,13 @@ class EllipsoidalCS(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), Dictionar
 class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
     axisAbbrev = Column(String(50), nullable=False)
     axisDirection = Column(String(50), nullable=False)
+
+    descriptionReference_id = Column(String(255), ForeignKey('AxisName.identifier'))
+    descriptionReference = relationship(
+        "AxisName",
+        primaryjoin = 'CoordinateSystemAxis.descriptionReference_id==AxisName.identifier',
+        uselist=False
+        )
+
+class AxisName(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
+    pass
