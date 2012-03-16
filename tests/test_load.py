@@ -12,7 +12,7 @@ class TestXML(unittest.TestCase):
     def testKeys(self):
         keys = self.xml.keys()
         self.assertIsInstance(keys, list)
-        self.assertEqual(len(keys), 20)
+        self.assertEqual(len(keys), 23)
 
     def testContains(self):
         self.assertTrue('urn:ogc:def:datum:EPSG::6277' in self.xml)
@@ -52,20 +52,23 @@ class TestLoader(unittest.TestCase):
         obj = self.loader['urn:ogc:def:crs:EPSG::4277']
         self.assertIsInstance(obj, schema.GeodeticCRS)
 
-    def _testCoordinateSystem(self, urn, class_):
+    def _testCoordinateSystem(self, urn, class_, axisCount):
         obj = self.loader[urn]
         self.assertIsInstance(obj, class_)
         self.assertIsInstance(obj.axes, list)
-        self.assertEqual(len(obj.axes), 2)
+        self.assertEqual(len(obj.axes), axisCount)
         for axis in obj.axes:
             self.assertIsInstance(axis, schema.CoordinateSystemAxis)
         
     def testEllipsoidalCS(self):
-        self._testCoordinateSystem('urn:ogc:def:cs:EPSG::6422', schema.EllipsoidalCS)
+        self._testCoordinateSystem('urn:ogc:def:cs:EPSG::6422', schema.EllipsoidalCS, 2)
 
     def testCartesianCS(self):
-        self._testCoordinateSystem('urn:ogc:def:cs:EPSG::4400', schema.CartesianCS)
+        self._testCoordinateSystem('urn:ogc:def:cs:EPSG::4400', schema.CartesianCS, 2)
         
+    def testCartesianCS(self):
+        self._testCoordinateSystem('urn:ogc:def:cs:EPSG::6499', schema.VerticalCS, 1)
+
     def testCoordinateSystemAxis(self):
         obj = self.loader['urn:ogc:def:axis:EPSG::106']
         self.assertIsInstance(obj, schema.CoordinateSystemAxis)
@@ -84,9 +87,10 @@ class TestLoader(unittest.TestCase):
         obj = self.loader['urn:ogc:def:crs:EPSG::3855']
         self.assertIsInstance(obj, schema.VerticalCRS)
         self.assertIsInstance(obj.verticalDatum, schema.VerticalDatum)
+        self.assertIsInstance(obj.verticalCS, schema.VerticalCS)
 
     def testLoad(self):
-        expected_length = 19
+        expected_length = 22
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)

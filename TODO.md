@@ -15,7 +15,6 @@ object model:
     OperationParameter
     SphericalCS
     Transformation
-    VerticalCS
     epsg:ChangeRequest
     epsg:Deprecation
     epsg:NamingSystem

@@ -259,6 +259,9 @@ class Loader(object):
     def loadCartesianCS(self, element):
         return self.loadCoordinateSystem(element, schema.CartesianCS)
 
+    def loadVerticalCS(self, element):
+        return self.loadCoordinateSystem(element, schema.VerticalCS)
+
     def loadGeodeticCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.GeodeticCRS)
         instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]
@@ -275,6 +278,7 @@ class Loader(object):
     def loadVerticalCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.VerticalCRS)
         instance.verticalDatum = self[self.getFirstChildAttributeValue(element, 'verticalDatum', 'xlink:href')]
+        instance.verticalCS = self[self.getFirstChildAttributeValue(element, 'verticalCS', 'xlink:href')]
         return instance
 
     def load(self):

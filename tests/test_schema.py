@@ -154,6 +154,30 @@ class SchemaBuilder(object):
 
         return self.buildCoordinateSystem(schema.CartesianCS, properties)
 
+    def buildVerticalCS(self):
+        properties = {
+            'identifier': 'urn:ogc:def:cs:EPSG::6499',
+            'name': 'Vertical CS. Axis: height (H). Orientation: up. UoM: m.',
+            'type': 'vertical',
+            'remarks': 'Used in vertical coordinate reference systems.',
+            'informationSource': 'OGP',
+            'axes': [{
+                    'identifier': 'urn:ogc:def:axis:EPSG::114',
+                    'axisAbbrev': 'H',
+                    'axisDirection': 'up',
+                    'descriptionReference': {
+                        'identifier': 'urn:ogc:def:axis-name:EPSG::9904',
+                        'name': 'Gravity-related height',
+                        'description': "Height influenced by the Earth's gravity field.  In particular, orthometric height or normal height which are both approximations of the distance of a point above sea level. Positive upwards.",
+                        'informationSource': 'ISO 19111 "Geographical information - Spatial referencing by coordinates".',
+                        'remarks': 'Used in a 1D vertical coordinate system.'
+                        }
+                    }
+                      ]
+            }
+
+        return self.buildCoordinateSystem(schema.VerticalCS, properties)
+
     def buildCoordinateSystem(self, class_, properties):
         axesProperties = properties.pop('axes')
 
@@ -281,6 +305,9 @@ class TestEllipsoidalCS(TestDictionaryEntry):
     pass
 
 class TestCartesianCS(TestDictionaryEntry):
+    pass
+
+class TestVerticalCS(TestDictionaryEntry):
     pass
 
 class TestCoordinateSystemAxis(TestDictionaryEntry):

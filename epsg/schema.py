@@ -241,6 +241,9 @@ class EllipsoidalCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
 class CartesianCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
     pass
 
+class VerticalCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
+    pass
+
 class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
     axisAbbrev = Column(String(50), nullable=False)
     axisDirection = Column(String(50), nullable=False)
@@ -266,12 +269,19 @@ class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateR
         )
 
 class VerticalCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
-    # verticalCS is not yet implemented
 
     verticalDatum_id = Column(String(255), ForeignKey('VerticalDatum.identifier'))
     verticalDatum = relationship(
         "VerticalDatum",
         primaryjoin = 'VerticalCRS.verticalDatum_id==VerticalDatum.identifier',
         foreign_keys = [verticalDatum_id],
+        uselist=False
+        )
+
+    verticalCS_id = Column(String(255), ForeignKey('VerticalCS.identifier'))
+    verticalCS = relationship(
+        "VerticalCS",
+        primaryjoin = 'VerticalCRS.verticalCS_id==VerticalCS.identifier',
+        foreign_keys = [verticalCS_id],
         uselist=False
         )
