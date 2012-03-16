@@ -266,6 +266,10 @@ class Loader(object):
         instance.cartesianCS = self[self.getFirstChildAttributeValue(element, 'cartesianCS', 'xlink:href')]
         return instance
 
+    def loadVerticalCRS(self, element):
+        instance = self.loadCoordinateReferenceSystem(element, schema.VerticalCRS)
+        return instance
+
     def load(self):
         # iterate through all available keys
         for key in self.xml.keys():

@@ -197,6 +197,19 @@ class SchemaBuilder(object):
         obj.domainOfValidity = obj.baseGeodeticCRS.domainOfValidity
         return obj
 
+    def buildVerticalCRS(self):
+        obj = self.buildDictionaryEntry(schema.VerticalCRS, {
+                'identifier': 'urn:ogc:def:crs:EPSG::3855',
+                'name': 'EGM2008 geoid height',
+                'remarks': 'Height surface resulting from the application of the EGM2008 geoid model to the WGS 84 ellipsoid. Replaces EGM96 geoid (CRS code 5773).',
+                'scope': 'Geodesy.',
+                'type': 'vertical',
+                'informationSource': 'http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008/egm08_wgs84.html'
+                })
+        obj.domainOfValidity = self.buildAreaOfUse() # this should be replaced with obj.verticalDatum.domainOfValidity
+
+        return obj
+
 class TestDictionaryEntry(unittest.TestCase):
     """
     A base class used for testing schema objects
@@ -262,6 +275,9 @@ class TestAxisName(TestDictionaryEntry):
     pass
 
 class TestProjectedCRS(TestDictionaryEntry):
+    pass
+
+class TestVerticalCRS(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':

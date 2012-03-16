@@ -285,4 +285,62 @@
       </axis>
     </CartesianCS>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <VerticalCRS xmlns:gml="http://www.opengis.net/gml" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="ogp-crs-3855">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>vertical</epsg:type>
+          <epsg:informationSource>http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008/egm08_wgs84.html</epsg:informationSource>
+          <epsg:revisionDate>2009-01-30</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2008.097"/>
+          </epsg:changes>
+          <epsg:show>true</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:crs:EPSG::3855</identifier>
+      <name>EGM2008 geoid height</name>
+      <remarks>Height surface resulting from the application of the EGM2008 geoid model to the WGS 84 ellipsoid. Replaces EGM96 geoid (CRS code 5773).</remarks>
+      <domainOfValidity xlink:href="urn:ogc:def:area:EPSG::1262"/>
+      <scope>Geodesy.</scope>
+      <verticalCS xlink:href="urn:ogc:def:cs:EPSG::6499"/>
+      <verticalDatum xlink:href="urn:ogc:def:datum:EPSG::1027"/>
+    </VerticalCRS>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AreaOfUse xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-area-1262">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2001-06-05</epsg:revisionDate>
+          <epsg:show>false</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:area:EPSG::1262</identifier>
+      <name>World</name>
+      <gmd:EX_Extent>
+        <gmd:description>
+          <gco:CharacterString>World.</gco:CharacterString>
+        </gmd:description>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+              <gco:Decimal>-180</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+              <gco:Decimal>180</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+              <gco:Decimal>-90</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+              <gco:Decimal>90</gco:Decimal>
+            </gmd:northBoundLatitude>
+          </gmd:EX_GeographicBoundingBox>
+        </gmd:geographicElement>
+      </gmd:EX_Extent>
+    </epsg:AreaOfUse>
+  </dictionaryEntry>
 </Dictionary>

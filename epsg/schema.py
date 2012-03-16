@@ -252,6 +252,7 @@ class AxisName(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), Diction
     pass
 
 class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
+    #conversion is not yet implemented
     baseGeodeticCRS_id = Column(String(255), ForeignKey('GeodeticCRS.identifier'))
     baseGeodeticCRS = relationship(
         "CoordinateReferenceSystem",
@@ -259,3 +260,8 @@ class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateR
         foreign_keys = [baseGeodeticCRS_id],
         uselist=False
         )
+
+class VerticalCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
+    # verticalCS is not yet implemented
+    # verticalDatum is not yet implemented
+    pass
