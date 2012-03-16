@@ -8,23 +8,43 @@ from sqlalchemy.orm import relationship, validates
 import datetime
 
 # see http://stackoverflow.com/questions/4460830/enhance-sqlalchemy-syntax-for-polymorphic-identity
-class MetaPolymorphicBase(DeclarativeMeta):
+class MetaBase(DeclarativeMeta):
     """
-    A metaclass for assigning a polymorphic identity to its classes
+    A metaclass underpinning all classes in the schema object model
 
     This ensures each class created by this metaclass will have a
     polymorphic identity of it's own, allowing joined table
     inheritance in SQLAlchemy.
+
+    It also adds an `__eq__()` method to all classes that checks all
+    public attributes for equality.
     """
+
+    def __new__(cls, name, bases, dct):
+
+        def eq(self, other):
+            def compareAttrs():
+                for attr in (key for key in self.__dict__.keys() if not key.startswith('_')):
+                    if getattr(self, attr) != getattr(other, attr):
+                        return False
+                return True
+
+            return (
+                self.__class__ == other.__class__ and
+                compareAttrs()
+                )
+        dct['__eq__'] = eq
+
+        return super(MetaBase, cls).__new__(cls, name, bases, dct)
 
     def __init__(cls, *args, **kw):
         if getattr(cls, '_decl_class_registry', None) is None:
             return # they use this in the docs, so maybe its not a bad idea
         cls.__mapper_args__ = {'polymorphic_identity': cls.__name__}
-        return super(MetaPolymorphicBase, cls).__init__(*args, **kw)
+        return super(MetaBase, cls).__init__(*args, **kw)
 
 # Create a SQLAlchemy declarative base class using our metaclass
-Base = declarative_base(metaclass=MetaPolymorphicBase)
+Base = declarative_base(metaclass=MetaBase)
 
 # Mixins
 
@@ -106,12 +126,6 @@ class Identifier(Base):
     def __repr__(self):
         return "<%s('%s')>" % (self.__class__.__name__, self.identifier)
 
-    def __eq__(self, other):
-        return (
-            self.__class__ == other.__class__ and
-            self.identifier == other.identifier
-            )
-    
 class DictionaryEntry(IdentifierJoinMixin('Identifier'), Identifier):
 
     name = Column(String(255), nullable=False)
@@ -126,24 +140,9 @@ class DictionaryEntry(IdentifierJoinMixin('Identifier'), Identifier):
     def __repr__(self):
         return "<%s('%s','%s')>" % (self.__class__.__name__, self.identifier, self.name)
 
-    def __eq__(self, other):
-        return (
-            super(DictionaryEntry, self).__eq__(other) and
-            self.name == other.name and
-            self.remarks == other.remarks and
-            self.informationSource == other.informationSource and
-            self.anchorDefinition == other.anchorDefinition
-            )
-
 class PrimeMeridian(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
     greenwichLongitude = Column(Float)
-
-    def __eq__(self, other):
-        return (
-            super(PrimeMeridian, self).__eq__(other) and
-            self.greenwichLongitude == other.greenwichLongitude
-            )
 
 class AreaOfUse(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
@@ -153,31 +152,12 @@ class AreaOfUse(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     southBoundLatitude = Column(Float)
     northBoundLatitude = Column(Float)
 
-    def __eq__(self, other):
-        return (
-            super(AreaOfUse, self).__eq__(other) and
-            self.description == other.description and
-            self.westBoundLongitude == other.westBoundLongitude and
-            self.eastBoundLongitude == other.eastBoundLongitude and
-            self.southBoundLatitude == other.southBoundLatitude and
-            self.northBoundLatitude == other.northBoundLatitude
-            )
-
 class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
     semiMajorAxis = Column(Float, nullable=False)
     semiMinorAxis = Column(Float)
     inverseFlattening = Column(Float)
     isSphere = Column(String(50))
-
-    def __eq__(self, other):
-        return (
-            super(Ellipsoid, self).__eq__(other) and
-            self.semiMajorAxis == other.semiMajorAxis and
-            self.semiMinorAxis == other.semiMinorAxis and
-            self.inverseFlattening == other.inverseFlattening and
-            self.isSphere == other.isSphere
-            )
 
 class GeodeticDatum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
@@ -215,16 +195,6 @@ class GeodeticDatum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoin
         else:
             raise TypeError('Expected a date or datetime instance or a date string: %s' % date)
 
-    def __eq__(self, other):
-        return (
-            super(GeodeticDatum, self).__eq__(other) and
-            self.scope == other.scope and
-            self.realizationEpoch == other.realizationEpoch and
-            self.type == other.type and
-            self.informationSource == other.informationSource and
-            self.primeMeridian == other.primeMeridian
-            )
-
 class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     """
     A Base class for a coordinate reference system
@@ -240,12 +210,6 @@ class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, Id
         uselist=False
         )
 
-    def __eq__(self, other):
-        return (
-            super(CoordinateReferenceSystem, self).__eq__(other) and
-            self.geodeticDatum == other.geodeticDatum
-            )
-
 class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
     ellipsoidalCS_id = Column(String(255), ForeignKey('EllipsoidalCS.identifier'))
     ellipsoidalCS = relationship(
@@ -254,12 +218,6 @@ class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateRe
         uselist=False
         )
 
-    def __eq__(self, other):
-        return (
-            super(GeodeticCRS, self).__eq__(other) and
-            self.ellipsoidalCS == other.ellipsoidalCS
-            )
-
 class EllipsoidalCS(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     axis_id = Column(String(255), ForeignKey('CoordinateSystemAxis.identifier'))
     axes = relationship(
@@ -267,12 +225,6 @@ class EllipsoidalCS(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), Dictionar
         primaryjoin = 'EllipsoidalCS.axis_id==CoordinateSystemAxis.identifier',
         uselist=True
         )
-
-    def __eq__(self, other):
-        return (
-            super(EllipsoidalCS, self).__eq__(other) and
-            self.axes == other.axes
-            )
 
 class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
     axisAbbrev = Column(String(50), nullable=False)
