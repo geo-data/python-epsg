@@ -10,28 +10,30 @@ class SchemaBuilder(object):
     Creates schema objects for use in the tests
     """
 
-    def buildObject(self, class_, properties):
-        instance = class_(properties['identifier'], properties['name'])
-        for attr in [attr for attr in properties if attr not in ('name', 'identifier')]:
+    def buildObject(self, class_, constructor_args, properties):
+        instance = class_(*[properties[arg] for arg in constructor_args])
+        for attr in [attr for attr in properties if attr not in constructor_args]:
             setattr(instance, attr, properties[attr])
 
         return instance
 
-    def buildDictionaryEntry(self):
-        return self.buildObject(schema.DictionaryEntry, {
+    def buildDictionaryEntry(self, class_=schema.DictionaryEntry, properties=None):
+        if properties is None:
+            properties = {
                 'identifier': 'unique:urn',
                 'name': 'Test object'
-                })
+                }
+        return self.buildObject(class_, ['identifier', 'name'], properties)
 
     def buildPrimeMeridian(self):
-        return self.buildObject(schema.PrimeMeridian, {
+        return self.buildDictionaryEntry(schema.PrimeMeridian, {
                 'identifier': 'urn:ogc:def:meridian:EPSG::8901',
                 'name': 'Greenwich',
                 'greenwichLongitude': '0'
                 })
 
     def buildEllipsoid(self):
-        return self.buildObject(schema.Ellipsoid, {
+        return self.buildDictionaryEntry(schema.Ellipsoid, {
                 'identifier': 'urn:ogc:def:ellipsoid:EPSG::7001',
                 'name': 'Airy 1830',
                 'informationSource': 'Ordnance Survey of Great Britain.',
@@ -41,7 +43,7 @@ class SchemaBuilder(object):
                 })
 
     def buildAreaOfUse(self):
-        return self.buildObject(schema.AreaOfUse, {
+        return self.buildDictionaryEntry(schema.AreaOfUse, {
                 'identifier': 'urn:ogc:def:area:EPSG::1264',
                 'name': 'UK - Great Britain; Isle of Man',
                 'description': 'United Kingdom (UK) - Great Britain - England and Wales onshore, Scotland onshore and Western Isles nearshore; Isle of Man onshore.',
@@ -52,7 +54,7 @@ class SchemaBuilder(object):
                 })
 
     def buildGeodeticDatum(self):
-        obj = self.buildObject(schema.GeodeticDatum, {
+        obj = self.buildDictionaryEntry(schema.GeodeticDatum, {
                 'identifier': 'urn:ogc:def:datum:EPSG::6277',
                 'name': 'OSGB 1936',
                 'scope': 'Topographic mapping.',
@@ -66,7 +68,7 @@ class SchemaBuilder(object):
         return obj
 
     def buildGeodeticCRS(self):
-        obj = self.buildObject(schema.GeodeticCRS, {
+        obj = self.buildDictionaryEntry(schema.GeodeticCRS, {
                 'identifier': 'urn:ogc:def:crs:EPSG::4277',
                 'name': 'OSGB 1936',
                 'scope': 'Geodetic survey.',
@@ -78,7 +80,7 @@ class SchemaBuilder(object):
         return obj
 
     def buildEllipsoidalCS(self):
-        obj = self.buildObject(schema.EllipsoidalCS, {
+        obj = self.buildDictionaryEntry(schema.EllipsoidalCS, {
                 'identifier': 'urn:ogc:def:cs:EPSG::6422',
                 'name': 'Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree',
                 'type': 'ellipsoidal',
@@ -86,7 +88,30 @@ class SchemaBuilder(object):
                 'informationSource': 'OGP'
                 })
 
+        # add the axes
+        axes = [
+            self.buildCoordinateSystemAxis(), # default properties
+            self.buildCoordinateSystemAxis({  # custom properties
+                    'identifier': 'urn:ogc:def:axis:EPSG::107',
+                    'axisAbbrev': 'Long',
+                    'axisDirection': 'east'
+                    })
+            ]
+        obj.axes = axes
+
         return obj
+
+    def buildCoordinateSystemAxis(self, properties=None):
+        default_properties = {
+            'identifier': 'urn:ogc:def:axis:EPSG::106',
+            'axisAbbrev': 'Lat',
+            'axisDirection': 'north'
+            }
+        if properties:
+            default_properties.update(properties)
+
+        return self.buildObject(schema.CoordinateSystemAxis, ['identifier'], default_properties)
+
 
 class TestDictionaryEntry(unittest.TestCase):
     """
@@ -141,6 +166,9 @@ class TestGeodeticCRS(TestDictionaryEntry):
     pass
 
 class TestEllipsoidalCS(TestDictionaryEntry):
+    pass
+
+class TestCoordinateSystemAxis(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':

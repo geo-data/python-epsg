@@ -18,7 +18,7 @@ class TestRegistryCreate(unittest.TestCase):
         registry.create(self.loader)
 
         # check there are the expected number of entries in the database
-        entries = registry.session.query(schema.DictionaryEntry).all()
+        entries = registry.session.query(schema.Identifier).all()
         # session.query(schema.DictionaryEntry).count() seems to fail when using `setup.py test`
         self.assertTrue(len(entries) == len(self.loader))
 

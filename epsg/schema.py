@@ -82,13 +82,13 @@ def IdentifierJoinMixin(join_class):
 
 # Classes
 
-class DictionaryEntry(Base):
+class Identifier(Base):
+    """
+    An abstract base class that contains an EPSG identifier
 
+    This also sets up SQLAlchemy polymorphism for derived classes.
+    """
     identifier = Column(String(255), primary_key=True)
-    name = Column(String(255), nullable=False)
-    remarks = Column(String)
-    informationSource = Column(String)
-    anchorDefinition = Column(String)
 
     discriminator = Column('class', String(50))
     __mapper_args__ = {'polymorphic_on': discriminator}
@@ -100,8 +100,27 @@ class DictionaryEntry(Base):
         """
         return cls.__name__
 
-    def __init__(self, identifier, name):
+    def __init__(self, identifier):
         self.identifier = identifier
+
+    def __repr__(self):
+        return "<%s('%s')>" % (self.__class__.__name__, self.identifier)
+
+    def __eq__(self, other):
+        return (
+            self.__class__ == other.__class__ and
+            self.identifier == other.identifier
+            )
+    
+class DictionaryEntry(IdentifierJoinMixin('Identifier'), Identifier):
+
+    name = Column(String(255), nullable=False)
+    remarks = Column(String)
+    informationSource = Column(String)
+    anchorDefinition = Column(String)
+
+    def __init__(self, identifier, name):
+        super(DictionaryEntry, self).__init__(identifier)
         self.name = name
 
     def __repr__(self):
@@ -109,8 +128,7 @@ class DictionaryEntry(Base):
 
     def __eq__(self, other):
         return (
-            self.__class__ == other.__class__ and
-            self.identifier == other.identifier and
+            super(DictionaryEntry, self).__eq__(other) and
             self.name == other.name and
             self.remarks == other.remarks and
             self.informationSource == other.informationSource and
@@ -147,7 +165,7 @@ class AreaOfUse(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
 class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
-    semiMajorAxis = Column(Float)
+    semiMajorAxis = Column(Float, nullable=False)
     semiMinorAxis = Column(Float)
     inverseFlattening = Column(Float)
     isSphere = Column(String(50))
@@ -243,4 +261,19 @@ class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateRe
             )
 
 class EllipsoidalCS(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-    pass
+    axis_id = Column(String(255), ForeignKey('CoordinateSystemAxis.identifier'))
+    axes = relationship(
+        "CoordinateSystemAxis",
+        primaryjoin = 'EllipsoidalCS.axis_id==CoordinateSystemAxis.identifier',
+        uselist=True
+        )
+
+    def __eq__(self, other):
+        return (
+            super(EllipsoidalCS, self).__eq__(other) and
+            self.axes == other.axes
+            )
+
+class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
+    axisAbbrev = Column(String(50), nullable=False)
+    axisDirection = Column(String(50), nullable=False)

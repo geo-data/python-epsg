@@ -51,9 +51,17 @@ class TestLoader(unittest.TestCase):
     def testEllipsoidalCS(self):
         obj = self.loader['urn:ogc:def:cs:EPSG::6422']
         self.assertIsInstance(obj, schema.EllipsoidalCS)
+        self.assertIsInstance(obj.axes, list)
+        self.assertEqual(len(obj.axes), 2)
+        for axis in obj.axes:
+            self.assertIsInstance(axis, schema.CoordinateSystemAxis)
+
+    def testCoordinateSystemAxis(self):
+        obj = self.loader['urn:ogc:def:axis:EPSG::106']
+        self.assertIsInstance(obj, schema.CoordinateSystemAxis)
         
     def testLoad(self):
-        expected_length = 6
+        expected_length = 8
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)

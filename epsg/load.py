@@ -155,8 +155,11 @@ class Loader(object):
 
         return loader(element)
 
+    def getIdentifier(self, element):
+        return self.getFirstChildNodeText(element, 'identifier')
+    
     def loadDictionaryEntry(self, element, class_=schema.DictionaryEntry):
-        identifier = self.getFirstChildNodeText(element, 'identifier')
+        identifier = self.getIdentifier(element)
         name = self.getFirstChildNodeText(element, 'name')
 
         instance = class_(identifier, name)
@@ -208,10 +211,25 @@ class Loader(object):
         instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]
         return instance
 
+    def loadCoordinateSystemAxis(self, element):
+        identifier = self.getIdentifier(element)
+        instance = schema.CoordinateSystemAxis(identifier)
+        instance.axisAbbrev = self.getFirstChildNodeText(element, 'axisAbbrev')
+        instance.axisDirection = self.getFirstChildNodeText(element, 'axisDirection')
+
+        return instance
+    
     @addType
     def loadEllipsoidalCS(self, element):
         instance = self.loadDictionaryEntry(element, schema.EllipsoidalCS)
-        return instance    
+        axes = []
+        for axisNode in element.getElementsByTagName('axis'):
+            node = axisNode.getElementsByTagName('identifier')[0]
+            urn = getText(node)
+            axis = self[urn]
+            axes.append(axis)
+        instance.axes = axes
+        return instance
 
     def loadGeodeticCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.GeodeticCRS)
