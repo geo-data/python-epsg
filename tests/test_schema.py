@@ -68,6 +68,18 @@ class SchemaBuilder(object):
         obj.domainOfValidity = self.buildAreaOfUse()
         return obj
 
+    def buildVerticalDatum(self):
+        obj = self.buildDictionaryEntry(schema.VerticalDatum, {
+                'identifier': 'urn:ogc:def:datum:EPSG::1027',
+                'name': 'EGM2008 geoid',
+                'scope': 'Geodesy.',
+                'realizationEpoch': '2008-01-01',
+                'anchorDefinition': u"""WGS 84 ellipsoid.""",
+                'type': 'vertical',
+                'informationSource': 'http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008/egm08_wgs84.html'
+                })
+        return obj
+
     def buildGeodeticCRS(self):
         obj = self.buildDictionaryEntry(schema.GeodeticCRS, {
                 'identifier': 'urn:ogc:def:crs:EPSG::4277',
@@ -257,6 +269,9 @@ class TestEllipsoid(TestDictionaryEntry):
     pass
 
 class TestGeodeticDatum(TestDictionaryEntry):
+    pass
+
+class TestVerticalDatum(TestDictionaryEntry):
     pass
 
 class TestGeodeticCRS(TestDictionaryEntry):

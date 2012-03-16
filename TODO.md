@@ -16,7 +16,6 @@ object model:
     SphericalCS
     Transformation
     VerticalCS
-    VerticalDatum
     epsg:ChangeRequest
     epsg:Deprecation
     epsg:NamingSystem

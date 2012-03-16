@@ -181,13 +181,19 @@ class Loader(object):
     @addType
     @addScope
     @addDomainOfValidity
-    def loadGeodeticDatum(self, element):
-        instance = self.loadDictionaryEntry(element, schema.GeodeticDatum)
-
+    def loadDatum(self, element, class_):
+        instance = self.loadDictionaryEntry(element, class_)
         instance.realizationEpoch = self.getFirstChildNodeText(element, 'realizationEpoch')
+        return instance
+        
+    def loadGeodeticDatum(self, element):
+        instance = self.loadDatum(element, schema.GeodeticDatum)
         instance.primeMeridian = self[self.getFirstChildAttributeValue(element, 'primeMeridian', 'xlink:href')]
         instance.ellipsoid = self[self.getFirstChildAttributeValue(element, 'ellipsoid', 'xlink:href')]
         return instance
+
+    def loadVerticalDatum(self, element):
+        return self.loadDatum(element, schema.VerticalDatum)
 
     def loadEllipsoid(self, element):
         instance = self.loadDictionaryEntry(element, schema.Ellipsoid)
@@ -268,6 +274,7 @@ class Loader(object):
 
     def loadVerticalCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.VerticalCRS)
+        instance.verticalDatum = self[self.getFirstChildAttributeValue(element, 'verticalDatum', 'xlink:href')]
         return instance
 
     def load(self):

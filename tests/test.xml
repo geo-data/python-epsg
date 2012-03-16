@@ -343,4 +343,26 @@
       </gmd:EX_Extent>
     </epsg:AreaOfUse>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <VerticalDatum xmlns:gml="http://www.opengis.net/gml" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="ogp-datum-1027">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>vertical</epsg:type>
+          <epsg:informationSource>http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008/egm08_wgs84.html</epsg:informationSource>
+          <epsg:revisionDate>2009-01-30</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2008.097"/>
+          </epsg:changes>
+          <epsg:show>true</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:datum:EPSG::1027</identifier>
+      <name>EGM2008 geoid</name>
+      <domainOfValidity xlink:href="urn:ogc:def:area:EPSG::1262"/>
+      <scope>Geodesy.</scope>
+      <anchorDefinition>WGS 84 ellipsoid.</anchorDefinition>
+      <realizationEpoch>2008-01-01</realizationEpoch>
+    </VerticalDatum>
+  </dictionaryEntry>
 </Dictionary>

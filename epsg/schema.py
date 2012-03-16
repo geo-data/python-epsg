@@ -165,23 +165,9 @@ class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     inverseFlattening = Column(Float)
     isSphere = Column(String(50))
 
-class GeodeticDatum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
+class Datum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     realizationEpoch = Column(Date)
-
-    primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
-    primeMeridian = relationship(
-        "PrimeMeridian",
-        primaryjoin = 'GeodeticDatum.primeMeridian_id==PrimeMeridian.identifier',
-        uselist=False
-        )
-
-    ellipsoid_id = Column(String(255), ForeignKey('Ellipsoid.identifier'))
-    ellipsoid = relationship(
-        "Ellipsoid",
-        primaryjoin = 'GeodeticDatum.ellipsoid_id==Ellipsoid.identifier',
-        uselist=False
-        )
-
+    
     @validates('realizationEpoch')
     def validateDate(self, key, date):
         """
@@ -199,6 +185,24 @@ class GeodeticDatum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoin
             return date.date()
         else:
             raise TypeError('Expected a date or datetime instance or a date string: %s' % date)
+
+class GeodeticDatum(IdentifierJoinMixin('Datum'), Datum):
+    primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
+    primeMeridian = relationship(
+        "PrimeMeridian",
+        primaryjoin = 'GeodeticDatum.primeMeridian_id==PrimeMeridian.identifier',
+        uselist=False
+        )
+
+    ellipsoid_id = Column(String(255), ForeignKey('Ellipsoid.identifier'))
+    ellipsoid = relationship(
+        "Ellipsoid",
+        primaryjoin = 'GeodeticDatum.ellipsoid_id==Ellipsoid.identifier',
+        uselist=False
+        )
+
+class VerticalDatum(IdentifierJoinMixin('Datum'), Datum):
+    pass
 
 class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     """
@@ -263,5 +267,11 @@ class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateR
 
 class VerticalCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
     # verticalCS is not yet implemented
-    # verticalDatum is not yet implemented
-    pass
+
+    verticalDatum_id = Column(String(255), ForeignKey('VerticalDatum.identifier'))
+    verticalDatum = relationship(
+        "VerticalDatum",
+        primaryjoin = 'VerticalCRS.verticalDatum_id==VerticalDatum.identifier',
+        foreign_keys = [verticalDatum_id],
+        uselist=False
+        )
