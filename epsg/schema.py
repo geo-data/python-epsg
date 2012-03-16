@@ -2,12 +2,29 @@
 Classes representing the EPSG data schema
 """
 
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.ext.declarative import declarative_base, declared_attr, DeclarativeMeta
 from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey
 from sqlalchemy.orm import relationship, validates
 import datetime
 
-Base = declarative_base()
+# see http://stackoverflow.com/questions/4460830/enhance-sqlalchemy-syntax-for-polymorphic-identity
+class MetaPolymorphicBase(DeclarativeMeta):
+    """
+    A metaclass for assigning a polymorphic identity to its classes
+
+    This ensures each class created by this metaclass will have a
+    polymorphic identity of it's own, allowing joined table
+    inheritance in SQLAlchemy.
+    """
+
+    def __init__(cls, *args, **kw):
+        if getattr(cls, '_decl_class_registry', None) is None:
+            return # they use this in the docs, so maybe its not a bad idea
+        cls.__mapper_args__ = {'polymorphic_identity': cls.__name__}
+        return super(MetaPolymorphicBase, cls).__init__(*args, **kw)
+
+# Create a SQLAlchemy declarative base class using our metaclass
+Base = declarative_base(metaclass=MetaPolymorphicBase)
 
 # Mixins
 
@@ -78,7 +95,6 @@ class DictionaryEntry(Base):
             )
 
 class PrimeMeridian(DictionaryEntry):
-    __mapper_args__ = { "polymorphic_identity": 'PrimeMeridian' }
 
     identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     greenwichLongitude = Column(Float)
@@ -90,7 +106,6 @@ class PrimeMeridian(DictionaryEntry):
             )
 
 class AreaOfUse(DictionaryEntry):
-    __mapper_args__ = { "polymorphic_identity": 'AreaOfUse' }
 
     identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     description = Column(String)
@@ -110,7 +125,6 @@ class AreaOfUse(DictionaryEntry):
             )
 
 class Ellipsoid(DictionaryEntry):
-    __mapper_args__ = { "polymorphic_identity": 'Ellipsoid' }
 
     identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     semiMajorAxis = Column(Float)
@@ -128,7 +142,6 @@ class Ellipsoid(DictionaryEntry):
             )
 
 class GeodeticDatum(TypeMixin, DomainOfValidityMixin, DictionaryEntry):
-    __mapper_args__ = { "polymorphic_identity": 'GeodeticDatum' }
 
     identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
     realizationEpoch = Column(Date)
@@ -182,7 +195,6 @@ class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, DictionaryEntr
     This should not be instantiated directly as it has not
     corresponding GML entity.
     """
-    __mapper_args__ = { "polymorphic_identity": 'CoordinateReferenceSystem' }
 
     identifier = Column(String(255), ForeignKey('DictionaryEntry.identifier'), primary_key=True)
 
@@ -200,6 +212,5 @@ class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, DictionaryEntr
             )
 
 class GeodeticCRS(CoordinateReferenceSystem):
-    __mapper_args__ = { "polymorphic_identity": 'GeodeticCRS' }
 
     identifier = Column(String(255), ForeignKey('CoordinateReferenceSystem.identifier'), primary_key=True)
