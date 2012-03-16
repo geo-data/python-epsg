@@ -219,7 +219,6 @@ class Loader(object):
     @addDomainOfValidity
     def loadCoordinateReferenceSystem(self, element, class_):
         instance = self.loadDictionaryEntry(element, class_)
-        instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]
         return instance
 
     def loadCoordinateSystemAxis(self, element):
@@ -250,7 +249,14 @@ class Loader(object):
 
     def loadGeodeticCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.GeodeticCRS)
+        instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]
         instance.ellipsoidalCS = self[self.getFirstChildAttributeValue(element, 'ellipsoidalCS', 'xlink:href')]
+
+        return instance
+
+    def loadProjectedCRS(self, element):
+        instance = self.loadCoordinateReferenceSystem(element, schema.ProjectedCRS)
+        instance.baseGeodeticCRS = self[self.getFirstChildAttributeValue(element, 'baseGeodeticCRS', 'xlink:href')]
 
         return instance
 

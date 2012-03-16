@@ -205,18 +205,18 @@ class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, Id
     corresponding GML entity.
     """
 
-    geodeticDatum_id = Column(String(255), ForeignKey('GeodeticDatum.identifier'))
-    geodeticDatum = relationship(
-        "GeodeticDatum",
-        primaryjoin = 'CoordinateReferenceSystem.geodeticDatum_id==GeodeticDatum.identifier',
-        uselist=False
-        )
-
 class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
     ellipsoidalCS_id = Column(String(255), ForeignKey('EllipsoidalCS.identifier'))
     ellipsoidalCS = relationship(
         "EllipsoidalCS",
         primaryjoin = 'GeodeticCRS.ellipsoidalCS_id==EllipsoidalCS.identifier',
+        uselist=False
+        )
+
+    geodeticDatum_id = Column(String(255), ForeignKey('GeodeticDatum.identifier'))
+    geodeticDatum = relationship(
+        "GeodeticDatum",
+        primaryjoin = 'GeodeticCRS.geodeticDatum_id==GeodeticDatum.identifier',
         uselist=False
         )
 
@@ -241,3 +241,11 @@ class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
 
 class AxisName(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     pass
+
+class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
+    baseGeodeticCRS_id = Column(String(255), ForeignKey('GeodeticCRS.identifier'))
+    baseGeodeticCRS = relationship(
+        "GeodeticCRS",
+        primaryjoin = 'ProjectedCRS.baseGeodeticCRS_id==GeodeticCRS.identifier',
+        uselist=False
+        )

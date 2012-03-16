@@ -65,6 +65,7 @@ class SchemaBuilder(object):
                 })
 
         obj.primeMeridian = self.buildPrimeMeridian()
+        obj.domainOfValidity = self.buildAreaOfUse()
         return obj
 
     def buildGeodeticCRS(self):
@@ -76,6 +77,7 @@ class SchemaBuilder(object):
                 })
 
         obj.geodeticDatum = self.buildGeodeticDatum()
+        obj.domainOfValidity = obj.geodeticDatum.domainOfValidity
         obj.ellipsoidalCS = self.buildEllipsoidalCS()
         return obj
 
@@ -136,6 +138,19 @@ class SchemaBuilder(object):
 
         return self.buildDictionaryEntry(schema.AxisName, properties)
 
+    def buildProjectedCRS(self):
+        obj = self.buildDictionaryEntry(schema.ProjectedCRS, {
+                'identifier': 'urn:ogc:def:crs:EPSG::27700',
+                'name': 'OSGB 1936 / British National Grid',
+                'scope': 'Large and medium scale topographic mapping and engineering survey.',
+                'type': 'projected',
+                'informationSource': 'Ordnance Survey of Great Britain.'
+                })
+
+        obj.baseGeodeticCRS = self.buildGeodeticCRS()
+        obj.domainOfValidity = obj.baseGeodeticCRS.domainOfValidity
+        return obj
+
 class TestDictionaryEntry(unittest.TestCase):
     """
     A base class used for testing schema objects
@@ -195,6 +210,9 @@ class TestCoordinateSystemAxis(TestDictionaryEntry):
     pass
 
 class TestAxisName(TestDictionaryEntry):
+    pass
+
+class TestProjectedCRS(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':

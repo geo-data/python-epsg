@@ -63,9 +63,13 @@ class TestLoader(unittest.TestCase):
     def testAxisName(self):
         obj = self.loader['urn:ogc:def:axis-name:EPSG::9901']
         self.assertIsInstance(obj, schema.AxisName)
-        
+
+    def testProjectedCRS(self):
+        obj = self.loader['urn:ogc:def:crs:EPSG::27700']
+        self.assertIsInstance(obj, schema.ProjectedCRS)
+
     def testLoad(self):
-        expected_length = 10
+        expected_length = 11
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)
