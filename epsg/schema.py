@@ -30,17 +30,22 @@ Base = declarative_base(metaclass=MetaPolymorphicBase)
 
 class TypeMixin(object):
     """
-    Added to classes that require a type and a scope
+    Added to classes that require a type
     """
 
     @declared_attr
     def type(cls):
         return Column(String(255), nullable=False)
 
+class ScopeMixin(object):
+    """
+    Added to classes that require a scope
+    """
+
     @declared_attr
     def scope(cls):
         return Column(String(255), nullable=False)
-
+    
 class DomainOfValidityMixin(object):
     """
     Added to classes that require domainOfValidity
@@ -156,7 +161,7 @@ class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
             self.isSphere == other.isSphere
             )
 
-class GeodeticDatum(TypeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
+class GeodeticDatum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
 
     realizationEpoch = Column(Date)
 
@@ -202,7 +207,7 @@ class GeodeticDatum(TypeMixin, DomainOfValidityMixin, IdentifierJoinMixin('Dicti
             self.primeMeridian == other.primeMeridian
             )
 
-class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
+class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     """
     A Base class for a coordinate reference system
 
@@ -224,4 +229,18 @@ class CoordinateReferenceSystem(TypeMixin, DomainOfValidityMixin, IdentifierJoin
             )
 
 class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
+    ellipsoidalCS_id = Column(String(255), ForeignKey('EllipsoidalCS.identifier'))
+    ellipsoidalCS = relationship(
+        "EllipsoidalCS",
+        primaryjoin = 'GeodeticCRS.ellipsoidalCS_id==EllipsoidalCS.identifier',
+        uselist=False
+        )
+
+    def __eq__(self, other):
+        return (
+            super(GeodeticCRS, self).__eq__(other) and
+            self.ellipsoidalCS == other.ellipsoidalCS
+            )
+
+class EllipsoidalCS(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     pass

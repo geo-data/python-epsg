@@ -12,7 +12,7 @@ class TestXML(unittest.TestCase):
     def testKeys(self):
         keys = self.xml.keys()
         self.assertIsInstance(keys, list)
-        self.assertEqual(len(keys), 7)
+        self.assertEqual(len(keys), 10)
 
     def testContains(self):
         self.assertTrue('urn:ogc:def:datum:EPSG::6277' in self.xml)
@@ -44,8 +44,16 @@ class TestLoader(unittest.TestCase):
         obj = self.loader['urn:ogc:def:ellipsoid:EPSG::7001']
         self.assertIsInstance(obj, schema.Ellipsoid)
 
+    def testGeodeticCRS(self):
+        obj = self.loader['urn:ogc:def:crs:EPSG::4277']
+        self.assertIsInstance(obj, schema.GeodeticCRS)
+
+    def testEllipsoidalCS(self):
+        obj = self.loader['urn:ogc:def:cs:EPSG::6422']
+        self.assertIsInstance(obj, schema.EllipsoidalCS)
+        
     def testLoad(self):
-        expected_length = 5
+        expected_length = 6
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)

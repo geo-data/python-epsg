@@ -204,11 +204,18 @@ class Loader(object):
     @addType
     @addDomainOfValidity
     def loadCoordinateReferenceSystem(self, element, class_):
-        return self.loadDictionaryEntry(element, class_)
+        instance = self.loadDictionaryEntry(element, class_)
+        instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]
+        return instance
+
+    @addType
+    def loadEllipsoidalCS(self, element):
+        instance = self.loadDictionaryEntry(element, schema.EllipsoidalCS)
+        return instance    
 
     def loadGeodeticCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.GeodeticCRS)
-        instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]
+        instance.ellipsoidalCS = self[self.getFirstChildAttributeValue(element, 'ellipsoidalCS', 'xlink:href')]
 
         return instance
 

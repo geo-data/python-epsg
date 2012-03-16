@@ -74,6 +74,18 @@ class SchemaBuilder(object):
                 })
 
         obj.geodeticDatum = self.buildGeodeticDatum()
+        obj.ellipsoidalCS = self.buildEllipsoidalCS()
+        return obj
+
+    def buildEllipsoidalCS(self):
+        obj = self.buildObject(schema.EllipsoidalCS, {
+                'identifier': 'urn:ogc:def:cs:EPSG::6422',
+                'name': 'Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree',
+                'type': 'ellipsoidal',
+                'remarks': 'Coordinates referenced to this CS are in degrees. Any degree representation (e.g. DMSH, decimal, etc.) may be used but that used must be declared for the user by the supplier of data. Used in geographic 2D coordinate reference systems.',
+                'informationSource': 'OGP'
+                })
+
         return obj
 
 class TestDictionaryEntry(unittest.TestCase):
@@ -126,6 +138,9 @@ class TestGeodeticDatum(TestDictionaryEntry):
     pass
 
 class TestGeodeticCRS(TestDictionaryEntry):
+    pass
+
+class TestEllipsoidalCS(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':

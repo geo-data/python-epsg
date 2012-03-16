@@ -162,4 +162,38 @@
       </secondDefiningParameter>
     </Ellipsoid>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <EllipsoidalCS xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-cs-6422">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>ellipsoidal</epsg:type>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2008-06-23</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2008.045"/>
+          </epsg:changes>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:cs:EPSG::6422</identifier>
+      <name>Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree</name>
+      <remarks>Coordinates referenced to this CS are in degrees. Any degree representation (e.g. DMSH, decimal, etc.) may be used but that used must be declared for the user by the supplier of data. Used in geographic 2D coordinate reference systems.</remarks>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-106" gml:uom="urn:ogc:def:uom:EPSG::9122">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9901"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::106</identifier>
+          <axisAbbrev>Lat</axisAbbrev>
+          <axisDirection codeSpace="EPSG">north</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-107" gml:uom="urn:ogc:def:uom:EPSG::9122">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9902"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::107</identifier>
+          <axisAbbrev>Long</axisAbbrev>
+          <axisDirection codeSpace="EPSG">east</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+    </EllipsoidalCS>
+  </dictionaryEntry>
 </Dictionary>
