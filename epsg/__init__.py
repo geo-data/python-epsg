@@ -1,12 +1,15 @@
 """
 An API to the EPSG registry
 
-This module provides a way of accessing the data in the EPSG registry
-(http://www.epsg-registry.org). You can: access the latest version
-data in the registry; export the online registry to a local database;
-query the registry for data you are interested in.
+This package provides an API for accessing the data in the EPSG
+registry (http://www.epsg-registry.org). An object model is provided
+that maps to the GML available as an export from the registry,
+available in the `epsg.schema` module.
 
-See the `Registry` class for more information.
+The `epsg.Registry` class provides a functionality to import the
+online EPSG registry to a local SQL database: you can then query the
+database to return the objects you are interested in. See the
+`Registry` class for more information.
 """
 
 __version__ = '0.0.1'
