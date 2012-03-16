@@ -236,8 +236,8 @@ class Loader(object):
         return instance
 
     @addType
-    def loadEllipsoidalCS(self, element):
-        instance = self.loadDictionaryEntry(element, schema.EllipsoidalCS)
+    def loadCoordinateSystem(self, element, class_):
+        instance = self.loadDictionaryEntry(element, class_)
         axes = []
         for axisNode in element.getElementsByTagName('axis'):
             node = axisNode.getElementsByTagName('identifier')[0]
@@ -246,6 +246,12 @@ class Loader(object):
             axes.append(axis)
         instance.axes = axes
         return instance
+
+    def loadEllipsoidalCS(self, element):
+        return self.loadCoordinateSystem(element, schema.EllipsoidalCS)
+
+    def loadCartesianCS(self, element):
+        return self.loadCoordinateSystem(element, schema.CartesianCS)
 
     def loadGeodeticCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.GeodeticCRS)
@@ -257,7 +263,7 @@ class Loader(object):
     def loadProjectedCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.ProjectedCRS)
         instance.baseGeodeticCRS = self[self.getFirstChildAttributeValue(element, 'baseGeodeticCRS', 'xlink:href')]
-
+        instance.cartesianCS = self[self.getFirstChildAttributeValue(element, 'cartesianCS', 'xlink:href')]
         return instance
 
     def load(self):

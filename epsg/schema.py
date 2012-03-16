@@ -223,13 +223,19 @@ class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateRe
         uselist=False
         )
 
-class EllipsoidalCS(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
+class CoordinateSystem(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     axis_id = Column(String(255), ForeignKey('CoordinateSystemAxis.identifier'))
     axes = relationship(
         "CoordinateSystemAxis",
-        primaryjoin = 'EllipsoidalCS.axis_id==CoordinateSystemAxis.identifier',
+        primaryjoin = 'CoordinateSystem.axis_id==CoordinateSystemAxis.identifier',
         uselist=True
         )
+
+class EllipsoidalCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
+    pass
+
+class CartesianCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
+    pass
 
 class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
     axisAbbrev = Column(String(50), nullable=False)

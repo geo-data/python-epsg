@@ -226,4 +226,63 @@
       <remarks>Used in geographic 2D and geographic 3D coordinate reference systems.</remarks>
     </epsg:AxisName>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9906">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2000-03-07</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>East pointing axis used in 2D projected coordinate systems.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9906</identifier>
+      <name>Easting</name>
+    </epsg:AxisName>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9907">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2000-03-07</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>North pointing axis used in 2D projected coordinate systems.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9907</identifier>
+      <name>Northing</name>
+    </epsg:AxisName>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <CartesianCS xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-cs-4400">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>Cartesian</epsg:type>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2001-04-29</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:cs:EPSG::4400</identifier>
+      <name>Cartesian 2D CS. Axes: easting, northing (E,N). Orientations: east, north. UoM: m.</name>
+      <remarks>Used in projected and engineering coordinate reference systems.</remarks>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-1" gml:uom="urn:ogc:def:uom:EPSG::9001">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9906"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::1</identifier>
+          <axisAbbrev>E</axisAbbrev>
+          <axisDirection codeSpace="EPSG">east</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-2" gml:uom="urn:ogc:def:uom:EPSG::9001">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9907"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::2</identifier>
+          <axisAbbrev>N</axisAbbrev>
+          <axisDirection codeSpace="EPSG">north</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+    </CartesianCS>
+  </dictionaryEntry>
 </Dictionary>

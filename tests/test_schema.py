@@ -82,18 +82,13 @@ class SchemaBuilder(object):
         return obj
 
     def buildEllipsoidalCS(self):
-        obj = self.buildDictionaryEntry(schema.EllipsoidalCS, {
-                'identifier': 'urn:ogc:def:cs:EPSG::6422',
-                'name': 'Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree',
-                'type': 'ellipsoidal',
-                'remarks': 'Coordinates referenced to this CS are in degrees. Any degree representation (e.g. DMSH, decimal, etc.) may be used but that used must be declared for the user by the supplier of data. Used in geographic 2D coordinate reference systems.',
-                'informationSource': 'OGP'
-                })
-
-        # add the axes
-        axes = [
-            self.buildCoordinateSystemAxis(), # default properties
-            self.buildCoordinateSystemAxis({  # custom properties
+        properties = {
+            'identifier': 'urn:ogc:def:cs:EPSG::6422',
+            'name': 'Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree',
+            'type': 'ellipsoidal',
+            'remarks': 'Coordinates referenced to this CS are in degrees. Any degree representation (e.g. DMSH, decimal, etc.) may be used but that used must be declared for the user by the supplier of data. Used in geographic 2D coordinate reference systems.',
+            'informationSource': 'OGP',
+            'axes': [{
                     'identifier': 'urn:ogc:def:axis:EPSG::107',
                     'axisAbbrev': 'Long',
                     'axisDirection': 'east',
@@ -104,8 +99,58 @@ class SchemaBuilder(object):
                         'description': 'Angle from the prime meridian plane to the meridian plane passing through the given point, eastwards usually treated as positive.',
                         'informationSource': 'OGP'
                         }
-                    })
-            ]
+                    }, {
+                    'identifier': 'urn:ogc:def:axis:EPSG::106',
+                    'axisAbbrev': 'Lat',
+                    'axisDirection': 'north'
+                    }
+                     ]
+            }
+
+        return self.buildCoordinateSystem(schema.EllipsoidalCS, properties)
+
+    def buildCartesianCS(self):
+        properties = {
+            'identifier': 'urn:ogc:def:cs:EPSG::4400',
+            'name': 'Cartesian 2D CS. Axes: easting, northing (E,N). Orientations: east, north. UoM: m',
+            'type': 'Cartesian',
+            'remarks': 'Used in projected and engineering coordinate reference systems.',
+            'informationSource': 'OGP',
+            'axes': [{
+                    'identifier': 'urn:ogc:def:axis:EPSG::1',
+                    'axisAbbrev': 'E',
+                    'axisDirection': 'east',
+                    'descriptionReference': {
+                        'identifier': 'urn:ogc:def:axis-name:EPSG::9906',
+                        'name': 'Easting',
+                        'description': 'East pointing axis used in 2D projected coordinate systems.',
+                        'informationSource': 'OGP'
+                        }
+                    }, {
+                    'identifier': 'urn:ogc:def:axis:EPSG::2',
+                    'axisAbbrev': 'N',
+                    'axisDirection': 'north',
+                    'descriptionReference': {
+                        'identifier': 'urn:ogc:def:axis-name:EPSG::9907',
+                        'name': 'Northing',
+                        'description': 'North pointing axis used in 2D projected coordinate systems.',
+                        'informationSource': 'OGP'
+                        }
+                    }
+                      ]
+            }
+
+        return self.buildCoordinateSystem(schema.CartesianCS, properties)
+
+    def buildCoordinateSystem(self, class_, properties):
+        axesProperties = properties.pop('axes')
+
+        obj = self.buildDictionaryEntry(class_, properties)
+
+        # add the axes
+        axes = []
+        for axisProperties in axesProperties:
+            axes.append(self.buildCoordinateSystemAxis(axisProperties))
         obj.axes = axes
 
         return obj
@@ -148,6 +193,7 @@ class SchemaBuilder(object):
                 })
 
         obj.baseGeodeticCRS = self.buildGeodeticCRS()
+        obj.cartesianCS = self.buildCartesianCS()
         obj.domainOfValidity = obj.baseGeodeticCRS.domainOfValidity
         return obj
 
@@ -204,6 +250,9 @@ class TestGeodeticCRS(TestDictionaryEntry):
     pass
 
 class TestEllipsoidalCS(TestDictionaryEntry):
+    pass
+
+class TestCartesianCS(TestDictionaryEntry):
     pass
 
 class TestCoordinateSystemAxis(TestDictionaryEntry):
