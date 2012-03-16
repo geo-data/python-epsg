@@ -79,11 +79,20 @@ class XML(object):
 
 def addType(method):
     """
-    Add type and scope attributes
+    Add the type attribute
     """
     def wrapper(self, element, *args, **kwargs):
         instance = method(self, element, *args, **kwargs)
         instance.type = self.getFirstChildNodeText(element, 'epsg:type')
+        return instance
+    return wrapper
+
+def addScope(method):
+    """
+    Add the scope attribute
+    """
+    def wrapper(self, element, *args, **kwargs):
+        instance = method(self, element, *args, **kwargs)
         instance.scope = self.getFirstChildNodeText(element, 'scope')
         return instance
     return wrapper
@@ -170,6 +179,7 @@ class Loader(object):
         return instance
 
     @addType
+    @addScope
     @addDomainOfValidity
     def loadGeodeticDatum(self, element):
         instance = self.loadDictionaryEntry(element, schema.GeodeticDatum)
@@ -205,6 +215,7 @@ class Loader(object):
         return instance
 
     @addType
+    @addScope
     @addDomainOfValidity
     def loadCoordinateReferenceSystem(self, element, class_):
         instance = self.loadDictionaryEntry(element, class_)
