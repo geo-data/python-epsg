@@ -195,6 +195,9 @@ class Loader(object):
     def loadVerticalDatum(self, element):
         return self.loadDatum(element, schema.VerticalDatum)
 
+    def loadEngineeringDatum(self, element):
+        return self.loadDatum(element, schema.EngineeringDatum)
+
     def loadEllipsoid(self, element):
         instance = self.loadDictionaryEntry(element, schema.Ellipsoid)
         instance.semiMajorAxis = self.getFirstChildNodeText(element, 'semiMajorAxis')
@@ -284,6 +287,7 @@ class Loader(object):
     def loadEngineeringCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.EngineeringCRS)
         instance.coordinateSystem = self[self.getFirstChildAttributeValue(element, 'coordinateSystem', 'xlink:href')]
+        instance.engineeringDatum = self[self.getFirstChildAttributeValue(element, 'engineeringDatum', 'xlink:href')]
         return instance
     
     def load(self):

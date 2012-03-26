@@ -16,7 +16,6 @@
     ConventionalUnit
     Conversion
     DerivedUnit
-    EngineeringDatum
     OperationMethod
     OperationParameter
     SphericalCS

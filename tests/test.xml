@@ -519,4 +519,24 @@
       <name>Second local axis</name>
     </epsg:AxisName>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <EngineeringDatum xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-datum-9300">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>engineering</epsg:type>
+          <epsg:revisionDate>2008-06-24</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2008.045"/>
+          </epsg:changes>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:datum:EPSG::9300</identifier>
+      <name>Astra Minas</name>
+      <remarks/>
+      <domainOfValidity xlink:href="urn:ogc:def:area:EPSG::1265"/>
+      <scope>Oil industry mapping.</scope>
+      <anchorDefinition>Origin at 45°59'54.79"S, 67°34'38.94"W (of Greenwich).</anchorDefinition>
+    </EngineeringDatum>
+  </dictionaryEntry>
 </Dictionary>

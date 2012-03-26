@@ -204,6 +204,9 @@ class GeodeticDatum(IdentifierJoinMixin('Datum'), Datum):
 class VerticalDatum(IdentifierJoinMixin('Datum'), Datum):
     pass
 
+class EngineeringDatum(IdentifierJoinMixin('Datum'), Datum):
+    pass
+
 class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     """
     A Base class for a coordinate reference system
@@ -296,4 +299,10 @@ class EngineeringCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), Coordinat
         uselist=False
         )
 
-    # engineeringDatum attribute still to be implemented
+    engineeringDatum_id = Column(String(255), ForeignKey('EngineeringDatum.identifier'))
+    engineeringDatum = relationship(
+        "EngineeringDatum",
+        primaryjoin = 'EngineeringCRS.engineeringDatum_id==EngineeringDatum.identifier',
+        foreign_keys = [engineeringDatum_id],
+        uselist=False
+        )

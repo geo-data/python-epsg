@@ -80,6 +80,16 @@ class SchemaBuilder(object):
                 })
         return obj
 
+    def buildEngineeringDatum(self):
+        obj = self.buildDictionaryEntry(schema.EngineeringDatum, {
+                'identifier': 'urn:ogc:def:datum:EPSG::9300',
+                'name': 'Astra Minas',
+                'scope': 'Oil industry mapping.',
+                'anchorDefinition': u"""Origin at 45°59'54.79"S, 67°34'38.94"W (of Greenwich).""",
+                'type': 'engineering'
+                })
+        return obj
+
     def buildGeodeticCRS(self):
         obj = self.buildDictionaryEntry(schema.GeodeticCRS, {
                 'identifier': 'urn:ogc:def:crs:EPSG::4277',
@@ -256,7 +266,8 @@ class SchemaBuilder(object):
                 'type': 'engineering'
                 })
         obj.coordinateSystem = self.buildCartesianCS()
-        # obj.domainOfValidity = obj.engineeringDatum.domainOfValidity
+        obj.engineeringDatum = self.buildEngineeringDatum()
+        obj.domainOfValidity = obj.engineeringDatum.domainOfValidity
 
         return obj
 
@@ -310,6 +321,9 @@ class TestGeodeticDatum(TestDictionaryEntry):
     pass
 
 class TestVerticalDatum(TestDictionaryEntry):
+    pass
+
+class TestEngineeringDatum(TestDictionaryEntry):
     pass
 
 class TestGeodeticCRS(TestDictionaryEntry):
