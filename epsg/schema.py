@@ -74,14 +74,14 @@ class DomainOfValidityMixin(object):
     Added to classes that require domainOfValidity
     """
     @declared_attr
-    def domainOfValidity_id(cls):
+    def _domainOfValidity_id(cls):
         return Column(String(255), ForeignKey('AreaOfUse.identifier'))
 
     @declared_attr
     def domainOfValidity(cls):
         return relationship(
             "AreaOfUse",
-            primaryjoin = '%s.domainOfValidity_id==AreaOfUse.identifier' % cls.__name__,
+            primaryjoin = '%s._domainOfValidity_id==AreaOfUse.identifier' % cls.__name__,
             uselist=False
             )
 
@@ -121,8 +121,8 @@ class Identifier(Base):
     """
     identifier = Column(String(255), primary_key=True)
 
-    discriminator = Column('class', String(50))
-    __mapper_args__ = {'polymorphic_on': discriminator}
+    _discriminator = Column('class', String(50))
+    __mapper_args__ = {'polymorphic_on': _discriminator}
 
     @declared_attr
     def __tablename__(cls):
@@ -187,17 +187,17 @@ class Datum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('D
             raise TypeError('Expected a date or datetime instance or a date string: %s' % date)
 
 class GeodeticDatum(IdentifierJoinMixin('Datum'), Datum):
-    primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
+    _primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
     primeMeridian = relationship(
         "PrimeMeridian",
-        primaryjoin = 'GeodeticDatum.primeMeridian_id==PrimeMeridian.identifier',
+        primaryjoin = 'GeodeticDatum._primeMeridian_id==PrimeMeridian.identifier',
         uselist=False
         )
 
-    ellipsoid_id = Column(String(255), ForeignKey('Ellipsoid.identifier'))
+    _ellipsoid_id = Column(String(255), ForeignKey('Ellipsoid.identifier'))
     ellipsoid = relationship(
         "Ellipsoid",
-        primaryjoin = 'GeodeticDatum.ellipsoid_id==Ellipsoid.identifier',
+        primaryjoin = 'GeodeticDatum._ellipsoid_id==Ellipsoid.identifier',
         uselist=False
         )
 
@@ -216,25 +216,25 @@ class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, Id
     """
 
 class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
-    ellipsoidalCS_id = Column(String(255), ForeignKey('EllipsoidalCS.identifier'))
+    _ellipsoidalCS_id = Column(String(255), ForeignKey('EllipsoidalCS.identifier'))
     ellipsoidalCS = relationship(
         "EllipsoidalCS",
-        primaryjoin = 'GeodeticCRS.ellipsoidalCS_id==EllipsoidalCS.identifier',
+        primaryjoin = 'GeodeticCRS._ellipsoidalCS_id==EllipsoidalCS.identifier',
         uselist=False
         )
 
-    geodeticDatum_id = Column(String(255), ForeignKey('GeodeticDatum.identifier'))
+    _geodeticDatum_id = Column(String(255), ForeignKey('GeodeticDatum.identifier'))
     geodeticDatum = relationship(
         "GeodeticDatum",
-        primaryjoin = 'GeodeticCRS.geodeticDatum_id==GeodeticDatum.identifier',
+        primaryjoin = 'GeodeticCRS._geodeticDatum_id==GeodeticDatum.identifier',
         uselist=False
         )
 
 class CoordinateSystem(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-    axis_id = Column(String(255), ForeignKey('CoordinateSystemAxis.identifier'))
+    _axis_id = Column(String(255), ForeignKey('CoordinateSystemAxis.identifier'))
     axes = relationship(
         "CoordinateSystemAxis",
-        primaryjoin = 'CoordinateSystem.axis_id==CoordinateSystemAxis.identifier',
+        primaryjoin = 'CoordinateSystem._axis_id==CoordinateSystemAxis.identifier',
         uselist=True
         )
 
@@ -254,10 +254,10 @@ class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
     axisAbbrev = Column(String(50), nullable=False)
     axisDirection = Column(String(50), nullable=False)
 
-    descriptionReference_id = Column(String(255), ForeignKey('AxisName.identifier'))
+    _descriptionReference_id = Column(String(255), ForeignKey('AxisName.identifier'))
     descriptionReference = relationship(
         "AxisName",
-        primaryjoin = 'CoordinateSystemAxis.descriptionReference_id==AxisName.identifier',
+        primaryjoin = 'CoordinateSystemAxis._descriptionReference_id==AxisName.identifier',
         uselist=False
         )
 
@@ -266,47 +266,47 @@ class AxisName(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), Diction
 
 class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
     #conversion is not yet implemented
-    baseGeodeticCRS_id = Column(String(255), ForeignKey('GeodeticCRS.identifier'))
+    _baseGeodeticCRS_id = Column(String(255), ForeignKey('GeodeticCRS.identifier'))
     baseGeodeticCRS = relationship(
         "CoordinateReferenceSystem",
-        primaryjoin = 'ProjectedCRS.baseGeodeticCRS_id==CoordinateReferenceSystem.identifier',
-        foreign_keys = [baseGeodeticCRS_id],
+        primaryjoin = 'ProjectedCRS._baseGeodeticCRS_id==CoordinateReferenceSystem.identifier',
+        foreign_keys = [_baseGeodeticCRS_id],
         uselist=False
         )
 
 class VerticalCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
 
-    verticalDatum_id = Column(String(255), ForeignKey('VerticalDatum.identifier'))
+    _verticalDatum_id = Column(String(255), ForeignKey('VerticalDatum.identifier'))
     verticalDatum = relationship(
         "VerticalDatum",
-        primaryjoin = 'VerticalCRS.verticalDatum_id==VerticalDatum.identifier',
-        foreign_keys = [verticalDatum_id],
+        primaryjoin = 'VerticalCRS._verticalDatum_id==VerticalDatum.identifier',
+        foreign_keys = [_verticalDatum_id],
         uselist=False
         )
 
-    verticalCS_id = Column(String(255), ForeignKey('VerticalCS.identifier'))
+    _verticalCS_id = Column(String(255), ForeignKey('VerticalCS.identifier'))
     verticalCS = relationship(
         "VerticalCS",
-        primaryjoin = 'VerticalCRS.verticalCS_id==VerticalCS.identifier',
-        foreign_keys = [verticalCS_id],
+        primaryjoin = 'VerticalCRS._verticalCS_id==VerticalCS.identifier',
+        foreign_keys = [_verticalCS_id],
         uselist=False
         )
 
 class EngineeringCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
 
-    coordinateSystem_id = Column(String(255), ForeignKey('CoordinateSystem.identifier'))
+    _coordinateSystem_id = Column(String(255), ForeignKey('CoordinateSystem.identifier'))
     coordinateSystem = relationship(
         "CoordinateSystem",
-        primaryjoin = 'EngineeringCRS.coordinateSystem_id==CoordinateSystem.identifier',
-        foreign_keys = [coordinateSystem_id],
+        primaryjoin = 'EngineeringCRS._coordinateSystem_id==CoordinateSystem.identifier',
+        foreign_keys = [_coordinateSystem_id],
         uselist=False
         )
 
-    engineeringDatum_id = Column(String(255), ForeignKey('EngineeringDatum.identifier'))
+    _engineeringDatum_id = Column(String(255), ForeignKey('EngineeringDatum.identifier'))
     engineeringDatum = relationship(
         "EngineeringDatum",
-        primaryjoin = 'EngineeringCRS.engineeringDatum_id==EngineeringDatum.identifier',
-        foreign_keys = [engineeringDatum_id],
+        primaryjoin = 'EngineeringCRS._engineeringDatum_id==EngineeringDatum.identifier',
+        foreign_keys = [_engineeringDatum_id],
         uselist=False
         )
 
@@ -318,9 +318,9 @@ class CompoundCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateRe
         'inherit_condition': ('identifier' == CoordinateReferenceSystem.identifier)
     }
 
-    componentReferenceSystem_id = Column(String(255), ForeignKey('CoordinateReferenceSystem.identifier'))
+    _componentReferenceSystem_id = Column(String(255), ForeignKey('CoordinateReferenceSystem.identifier'))
     componentReferenceSystems = relationship(
         "CoordinateReferenceSystem",
-        primaryjoin = 'CompoundCRS.componentReferenceSystem_id==CoordinateReferenceSystem.identifier',
+        primaryjoin = 'CompoundCRS._componentReferenceSystem_id==CoordinateReferenceSystem.identifier',
         uselist=True
         )

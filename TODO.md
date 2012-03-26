@@ -1,6 +1,5 @@
 # TODO
 
-- Make the `discriminator` and foreign key id attributes private
 - Add a `@validates` decorator to numeric attributes to perform on the
   fly conversions from strings.
 - The object model was created for the general requirements of a
@@ -10,16 +9,16 @@
 - The following EPSG GML elements are still to be mapped to the python
   object model:
 
-    BaseUnit
-    ConcatenatedOperation
-    ConventionalUnit
-    Conversion
-    DerivedUnit
-    OperationMethod
-    OperationParameter
-    Transformation
-    epsg:ChangeRequest
-    epsg:Deprecation
-    epsg:NamingSystem
-    epsg:Supersession
-    epsg:VersionHistory
+  - BaseUnit
+  - ConcatenatedOperation
+  - ConventionalUnit
+  - Conversion
+  - DerivedUnit
+  - OperationMethod
+  - OperationParameter
+  - Transformation
+  - epsg:ChangeRequest
+  - epsg:Deprecation
+  - epsg:NamingSystem
+  - epsg:Supersession
+  - epsg:VersionHistory
