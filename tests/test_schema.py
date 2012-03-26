@@ -188,6 +188,50 @@ class SchemaBuilder(object):
 
         return self.buildCoordinateSystem(schema.VerticalCS, properties)
 
+    def buildSphericalCS(self):
+        properties = {
+            'identifier': 'urn:ogc:def:cs:EPSG::6404',
+            'name': 'Spherical 3D CS. Axes: latitude, longitude, radius. Orientations: north, east, up. UoM: degrees, degrees, metres.',
+            'type': 'spherical',
+            'remarks': 'Used in geocentric 3D coordinate reference systems.',
+            'informationSource': 'Open GIS Consortium',
+            'axes': [{
+                    'identifier': 'urn:ogc:def:axis:EPSG::60',
+                    'axisAbbrev': 'Lat',
+                    'axisDirection': 'north',
+                    'descriptionReference': {
+                        'identifier': 'urn:ogc:def:axis-name:EPSG::9926',
+                        'name': 'Spherical latitude',
+                        'description': "Angle from the equatorial plane to the geocentric point vector, northwards usually treated as positive.",
+                        'informationSource': 'Open GIS Consortium'
+                        }
+                    },{
+                    'identifier': 'urn:ogc:def:axis:EPSG::61',
+                    'axisAbbrev': 'Long',
+                    'axisDirection': 'east',
+                    'descriptionReference': {
+                        'identifier': 'urn:ogc:def:axis-name:EPSG::9927',
+                        'name': 'Spherical longitude',
+                        'description': "Angle from the prime meridian plane to the meridian plane passing through a point, eastwards usually treated as positive.",
+                        'informationSource': 'Open GIS Consortium'
+                        }
+                    },{
+                    'identifier': 'urn:ogc:def:axis:EPSG::62',
+                    'axisAbbrev': 'R',
+                    'axisDirection': 'up',
+                    'descriptionReference': {
+                        'identifier': 'urn:ogc:def:axis-name:EPSG::9928',
+                        'name': 'Geocentric radius',
+                        'description': "The distance from the (geocentric) coordinate system origin to a point. The third axis of a spherical coordinate system.",
+                        'informationSource': 'Open GIS Consortium',
+                        'remarks': 'Used to avoid the singularity when the two angles in a 3D polar coordinate system lie in the same plane.'
+                        }
+                    }
+                      ]
+            }
+
+        return self.buildCoordinateSystem(schema.SphericalCS, properties)
+
     def buildCoordinateSystem(self, class_, properties):
         axesProperties = properties.pop('axes')
 
@@ -336,6 +380,9 @@ class TestCartesianCS(TestDictionaryEntry):
     pass
 
 class TestVerticalCS(TestDictionaryEntry):
+    pass
+
+class TestSphericalCS(TestDictionaryEntry):
     pass
 
 class TestCoordinateSystemAxis(TestDictionaryEntry):

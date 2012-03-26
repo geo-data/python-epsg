@@ -18,7 +18,6 @@
     DerivedUnit
     OperationMethod
     OperationParameter
-    SphericalCS
     Transformation
     epsg:ChangeRequest
     epsg:Deprecation

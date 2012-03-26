@@ -247,6 +247,9 @@ class CartesianCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
 class VerticalCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
     pass
 
+class SphericalCS(IdentifierJoinMixin('CoordinateSystem'), CoordinateSystem):
+    pass
+
 class CoordinateSystemAxis(IdentifierJoinMixin('Identifier'), Identifier):
     axisAbbrev = Column(String(50), nullable=False)
     axisDirection = Column(String(50), nullable=False)

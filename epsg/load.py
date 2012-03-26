@@ -265,6 +265,9 @@ class Loader(object):
     def loadVerticalCS(self, element):
         return self.loadCoordinateSystem(element, schema.VerticalCS)
 
+    def loadSphericalCS(self, element):
+        return self.loadCoordinateSystem(element, schema.SphericalCS)
+
     def loadGeodeticCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.GeodeticCRS)
         instance.geodeticDatum = self[self.getFirstChildAttributeValue(element, 'geodeticDatum', 'xlink:href')]

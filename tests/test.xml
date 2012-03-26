@@ -539,4 +539,90 @@
       <anchorDefinition>Origin at 45°59'54.79"S, 67°34'38.94"W (of Greenwich).</anchorDefinition>
     </EngineeringDatum>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <SphericalCS xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-cs-6404">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>spherical</epsg:type>
+          <epsg:informationSource>Open GIS Consortium</epsg:informationSource>
+          <epsg:revisionDate>2004-01-06</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2002.300"/>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2003.390"/>
+          </epsg:changes>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:cs:EPSG::6404</identifier>
+      <name>Spherical 3D CS. Axes: latitude, longitude, radius. Orientations: north, east, up. UoM: degrees, degrees, metres.</name>
+      <remarks>Used in geocentric 3D coordinate reference systems.</remarks>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-60" gml:uom="urn:ogc:def:uom:EPSG::9122">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9926"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::60</identifier>
+          <axisAbbrev>Lat</axisAbbrev>
+          <axisDirection codeSpace="EPSG">north</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-61" gml:uom="urn:ogc:def:uom:EPSG::9122">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9927"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::61</identifier>
+          <axisAbbrev>Long</axisAbbrev>
+          <axisDirection codeSpace="EPSG">east</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-62" gml:uom="urn:ogc:def:uom:EPSG::9001">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9928"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::62</identifier>
+          <axisAbbrev>R</axisAbbrev>
+          <axisDirection codeSpace="EPSG">up</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+    </SphericalCS>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9926">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>Open GIS Consortium</epsg:informationSource>
+          <epsg:revisionDate>2002-02-12</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>Angle from the equatorial plane to the geocentric point vector, northwards usually treated as positive.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9926</identifier>
+      <name>Spherical latitude</name>
+    </epsg:AxisName>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9927">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>Open GIS Consortium</epsg:informationSource>
+          <epsg:revisionDate>2002-02-12</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>Angle from the prime meridian plane to the meridian plane passing through a point, eastwards usually treated as positive.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9927</identifier>
+      <name>Spherical longitude</name>
+    </epsg:AxisName>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9928">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>Open GIS Consortium</epsg:informationSource>
+          <epsg:revisionDate>2002-02-12</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>The distance from the (geocentric) coordinate system origin to a point. The third axis of a spherical coordinate system.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9928</identifier>
+      <name>Geocentric radius</name>
+      <remarks>Used to avoid the singularity when the two angles in a 3D polar coordinate system lie in the same plane.</remarks>
+    </epsg:AxisName>
+  </dictionaryEntry>
 </Dictionary>
