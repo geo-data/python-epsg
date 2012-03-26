@@ -309,3 +309,18 @@ class EngineeringCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), Coordinat
         foreign_keys = [engineeringDatum_id],
         uselist=False
         )
+
+class CompoundCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
+    # specify `inherit_condition` as `CompoundCRS` is a
+    # self-referential relationship with `CoordinateReferenceSystem`
+    # (see http://stackoverflow.com/questions/2863336/creating-self-referential-tables-with-polymorphism-in-sqlalchemy)
+    __mapper_args__ = {
+        'inherit_condition': ('identifier' == CoordinateReferenceSystem.identifier)
+    }
+
+    componentReferenceSystem_id = Column(String(255), ForeignKey('CoordinateReferenceSystem.identifier'))
+    componentReferenceSystems = relationship(
+        "CoordinateReferenceSystem",
+        primaryjoin = 'CompoundCRS.componentReferenceSystem_id==CoordinateReferenceSystem.identifier',
+        uselist=True
+        )

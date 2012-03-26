@@ -303,17 +303,31 @@ class SchemaBuilder(object):
         return obj
 
     def buildEngineeringCRS(self):
-        obj = self.buildDictionaryEntry(schema.EngineeringCRS, {
+         obj = self.buildDictionaryEntry(schema.EngineeringCRS, {
                 'identifier': 'urn:ogc:def:crs:EPSG::5800',
                 'name': 'Astra Minas Grid',
                 'scope': 'Oil exploration.',
                 'type': 'engineering'
                 })
-        obj.coordinateSystem = self.buildCartesianCS()
-        obj.engineeringDatum = self.buildEngineeringDatum()
-        obj.domainOfValidity = obj.engineeringDatum.domainOfValidity
+         obj.coordinateSystem = self.buildCartesianCS()
+         obj.engineeringDatum = self.buildEngineeringDatum()
+         obj.domainOfValidity = obj.engineeringDatum.domainOfValidity
 
-        return obj
+         return obj
+
+    def buildCompoundCRS(self):
+         obj = self.buildDictionaryEntry(schema.CompoundCRS, {
+                'identifier': 'urn:ogc:def:crs:EPSG::7423',
+                'name': 'ETRS89 + EVRF2007 height',
+                'scope': 'For pan-European products and services.',
+                'type': 'compound',
+                'informationSource': 'IAG subcommission for Europe',
+                'remarks': 'Replaces ETRS89 + EVRF2000 height (CRS code 7409).'
+                })
+         obj.componentReferenceSystems = [ self.buildGeodeticCRS(), self.buildVerticalCRS() ]
+         obj.domainOfValidity = obj.componentReferenceSystems[0].domainOfValidity
+
+         return obj
 
 class TestDictionaryEntry(unittest.TestCase):
     """
@@ -348,8 +362,9 @@ class TestDictionaryEntry(unittest.TestCase):
         session.add(self.obj)
         session.commit()
 
-        obj = session.query(self.obj.__class__).filter_by(identifier=self.obj.identifier)[0]
-
+        results = list(session.query(schema.Identifier).filter_by(identifier=self.obj.identifier))
+        self.assertEqual(len(results), 1)
+        obj = results[0]
         self.assertEqual(self.obj, obj)
 
 class TestPrimeMeridian(TestDictionaryEntry):
@@ -398,6 +413,9 @@ class TestVerticalCRS(TestDictionaryEntry):
     pass
 
 class TestEngineeringCRS(TestDictionaryEntry):
+    pass
+
+class TestCompoundCRS(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':

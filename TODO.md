@@ -11,7 +11,6 @@
   object model:
 
     BaseUnit
-    CompoundCRS
     ConcatenatedOperation
     ConventionalUnit
     Conversion

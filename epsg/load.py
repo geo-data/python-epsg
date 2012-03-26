@@ -293,6 +293,16 @@ class Loader(object):
         instance.engineeringDatum = self[self.getFirstChildAttributeValue(element, 'engineeringDatum', 'xlink:href')]
         return instance
     
+    def loadCompoundCRS(self, element):
+        instance = self.loadCoordinateReferenceSystem(element, schema.CompoundCRS)
+        components = []
+        for componentNode in element.getElementsByTagName('componentReferenceSystem'):
+            urn = componentNode.attributes['xlink:href'].value
+            crs = self[urn]
+            components.append(crs)
+        instance.componentReferenceSystems = components
+        return instance
+
     def load(self):
         # iterate through all available keys
         for key in self.xml.keys():
