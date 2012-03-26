@@ -12,7 +12,7 @@ class TestXML(unittest.TestCase):
     def testKeys(self):
         keys = self.xml.keys()
         self.assertIsInstance(keys, list)
-        self.assertEqual(len(keys), 23)
+        self.assertEqual(len(keys), 30)
 
     def testContains(self):
         self.assertTrue('urn:ogc:def:datum:EPSG::6277' in self.xml)
@@ -89,8 +89,13 @@ class TestLoader(unittest.TestCase):
         self.assertIsInstance(obj.verticalDatum, schema.VerticalDatum)
         self.assertIsInstance(obj.verticalCS, schema.VerticalCS)
 
+    def testEngineeringCRS(self):
+        obj = self.loader['urn:ogc:def:crs:EPSG::5800']
+        self.assertIsInstance(obj, schema.EngineeringCRS)
+        self.assertIsInstance(obj.coordinateSystem, schema.CoordinateSystem)
+
     def testLoad(self):
-        expected_length = 22
+        expected_length = 29
         self.loader.load()
         self.assertEqual(len(self.loader.keys()), expected_length)
         self.assertEqual(len(self.loader.values()), expected_length)

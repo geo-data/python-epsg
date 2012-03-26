@@ -281,6 +281,11 @@ class Loader(object):
         instance.verticalCS = self[self.getFirstChildAttributeValue(element, 'verticalCS', 'xlink:href')]
         return instance
 
+    def loadEngineeringCRS(self, element):
+        instance = self.loadCoordinateReferenceSystem(element, schema.EngineeringCRS)
+        instance.coordinateSystem = self[self.getFirstChildAttributeValue(element, 'coordinateSystem', 'xlink:href')]
+        return instance
+    
     def load(self):
         # iterate through all available keys
         for key in self.xml.keys():

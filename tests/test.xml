@@ -403,4 +403,120 @@
       </axis>
     </VerticalCS>
   </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <EngineeringCRS xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-crs-5800">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>engineering</epsg:type>
+          <epsg:revisionDate>2000-03-07</epsg:revisionDate>
+          <epsg:show>true</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:crs:EPSG::5800</identifier>
+      <name>Astra Minas Grid</name>
+      <domainOfValidity xlink:href="urn:ogc:def:area:EPSG::1265"/>
+      <scope>Oil exploration.</scope>
+      <coordinateSystem xlink:href="urn:ogc:def:cs:EPSG::6507"/>
+      <engineeringDatum xlink:href="urn:ogc:def:datum:EPSG::9300"/>
+    </EngineeringCRS>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <CartesianCS xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-cs-6507">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:type>Cartesian</epsg:type>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2001-01-19</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:cs:EPSG::6507</identifier>
+      <name>Cartesian 2D CS. Axes: 1st local axis, 2nd local axis (X,Y). Orientations: north, west. UoM: m.</name>
+      <remarks>Used in engineering coordinate reference systems.</remarks>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-130" gml:uom="urn:ogc:def:uom:EPSG::9001">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9913"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::130</identifier>
+          <axisAbbrev>X</axisAbbrev>
+          <axisDirection codeSpace="EPSG">north</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+      <axis>
+        <CoordinateSystemAxis gml:id="epsg-axis-131" gml:uom="urn:ogc:def:uom:EPSG::9001">
+          <descriptionReference xlink:href="urn:ogc:def:axis-name:EPSG::9914"/>
+          <identifier codeSpace="OGP">urn:ogc:def:axis:EPSG::131</identifier>
+          <axisAbbrev>Y</axisAbbrev>
+          <axisDirection codeSpace="EPSG">west</axisDirection>
+        </CoordinateSystemAxis>
+      </axis>
+    </CartesianCS>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AreaOfUse xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-area-1265">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2006-02-03</epsg:revisionDate>
+          <epsg:changes>
+            <epsg:changeID xlink:href="urn:ogc:def:change-request:EPSG::2005.890"/>
+          </epsg:changes>
+          <epsg:show>false</epsg:show>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <identifier codeSpace="OGP">urn:ogc:def:area:EPSG::1265</identifier>
+      <name>Argentina - Comodoro Rivadavia</name>
+      <gmd:EX_Extent>
+        <gmd:description>
+          <gco:CharacterString>Argentina - Comodoro Rivadavia area.</gco:CharacterString>
+        </gmd:description>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+              <gco:Decimal>-69.5</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+              <gco:Decimal>-67.1</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+              <gco:Decimal>-46.7</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+              <gco:Decimal>-45.2</gco:Decimal>
+            </gmd:northBoundLatitude>
+          </gmd:EX_GeographicBoundingBox>
+        </gmd:geographicElement>
+      </gmd:EX_Extent>
+    </epsg:AreaOfUse>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9913">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2000-03-07</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>First axis of any local coordinate system.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9913</identifier>
+      <name>First local axis</name>
+      <remarks>First and second local coordinate axes are assumed to be horizontal and may be supplemented by 'local height' or 'local depth' to form a local 3D coordinate system.</remarks>
+    </epsg:AxisName>
+  </dictionaryEntry>
+  <dictionaryEntry xmlns="http://www.opengis.net/gml">
+    <epsg:AxisName xmlns:epsg="urn:x-ogp:spec:schema-xsd:EPSG:0.1:dataset" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" gml:id="epsg-axisname-9914">
+      <metaDataProperty>
+        <epsg:CommonMetaData>
+          <epsg:informationSource>OGP</epsg:informationSource>
+          <epsg:revisionDate>2000-03-07</epsg:revisionDate>
+          <epsg:isDeprecated>false</epsg:isDeprecated>
+        </epsg:CommonMetaData>
+      </metaDataProperty>
+      <description>Second axis of any local coordinate system.</description>
+      <identifier codeSpace="OGP">urn:ogc:def:axis-name:EPSG::9914</identifier>
+      <name>Second local axis</name>
+    </epsg:AxisName>
+  </dictionaryEntry>
 </Dictionary>

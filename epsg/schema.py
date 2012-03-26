@@ -285,3 +285,15 @@ class VerticalCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateRe
         foreign_keys = [verticalCS_id],
         uselist=False
         )
+
+class EngineeringCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
+
+    coordinateSystem_id = Column(String(255), ForeignKey('CoordinateSystem.identifier'))
+    coordinateSystem = relationship(
+        "CoordinateSystem",
+        primaryjoin = 'EngineeringCRS.coordinateSystem_id==CoordinateSystem.identifier',
+        foreign_keys = [coordinateSystem_id],
+        uselist=False
+        )
+
+    # engineeringDatum attribute still to be implemented

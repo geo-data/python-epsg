@@ -242,7 +242,21 @@ class SchemaBuilder(object):
                 'type': 'vertical',
                 'informationSource': 'http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008/egm08_wgs84.html'
                 })
-        obj.domainOfValidity = self.buildAreaOfUse() # this should be replaced with obj.verticalDatum.domainOfValidity
+        obj.verticalDatum = self.buildVerticalDatum()
+        obj.domainOfValidity = obj.verticalDatum.domainOfValidity
+        obj.verticalCS = self.buildVerticalCS()
+
+        return obj
+
+    def buildEngineeringCRS(self):
+        obj = self.buildDictionaryEntry(schema.EngineeringCRS, {
+                'identifier': 'urn:ogc:def:crs:EPSG::5800',
+                'name': 'Astra Minas Grid',
+                'scope': 'Oil exploration.',
+                'type': 'engineering'
+                })
+        obj.coordinateSystem = self.buildCartesianCS()
+        # obj.domainOfValidity = obj.engineeringDatum.domainOfValidity
 
         return obj
 
@@ -320,6 +334,9 @@ class TestProjectedCRS(TestDictionaryEntry):
     pass
 
 class TestVerticalCRS(TestDictionaryEntry):
+    pass
+
+class TestEngineeringCRS(TestDictionaryEntry):
     pass
 
 if __name__ == '__main__':
