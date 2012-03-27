@@ -151,13 +151,13 @@ class DictionaryEntry(IdentifierJoinMixin('Identifier'), Identifier):
         return "<%s('%s','%s')>" % (self.__class__.__name__, self.identifier, self.name)
 
 class PrimeMeridian(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-    greenwichLongitude = Column(Float)
+    greenwichLongitude = Column(Float, nullable=False)
 
 class AreaOfUse(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-    westBoundLongitude = Column(Float)
-    eastBoundLongitude = Column(Float)
-    southBoundLatitude = Column(Float)
-    northBoundLatitude = Column(Float)
+    westBoundLongitude = Column(Float, nullable=False)
+    eastBoundLongitude = Column(Float, nullable=False)
+    southBoundLatitude = Column(Float, nullable=False)
+    northBoundLatitude = Column(Float, nullable=False)
 
 class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     semiMajorAxis = Column(Float, nullable=False)
