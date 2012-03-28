@@ -135,10 +135,16 @@ class Service(object):
         self.url = url
 
     def connect(self):
+        """
+        Initiate an HTTP connection with the online registry
+        """
         self._parsedUrl = urlparse(self.url)
         self._conn = httplib.HTTPConnection(self._parsedUrl.netloc)
 
     def close(self):
+        """
+        Close the HTTP connection to the online registry
+        """
         self._conn.close()
 
     def getLatestVersion(self):

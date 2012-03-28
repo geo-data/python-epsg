@@ -3,6 +3,7 @@ Functionality for reading and manipulating EPSG XML data
 """
 
 from datetime import datetime
+from collections import Mapping
 import schema
 
 def getText(node, recurse=True):
@@ -17,7 +18,7 @@ def getText(node, recurse=True):
             txt.append(getText(child, recurse))
     return ''.join(txt).strip()
 
-class XML(object):
+class XML(Mapping):
     """
     This is a read-only dictionary type mapping URNs to XML objects
     """
@@ -49,6 +50,12 @@ class XML(object):
 
     def __contains__(self, key):
         return key in self.map
+
+    def __len__(self):
+        return len(self.map)
+
+    def __iter__(self):
+        return iter(self.map)
 
     def keys(self):
         return self.map.keys()
@@ -107,7 +114,7 @@ def addDomainOfValidity(method):
         return instance
     return wrapper
 
-class Loader(object):
+class XMLLoader(Mapping):
     """
     Create EPSG schema objects from XML
     """
@@ -134,6 +141,9 @@ class Loader(object):
 
     def __len__(self):
         return len(self.objects)
+
+    def __iter__(self):
+        return iter(self.objects)
 
     def keys(self):
         return self.objects.keys()

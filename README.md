@@ -4,62 +4,157 @@
 
 This package provides an API for accessing the data in the
 [EPSG registry](http://www.epsg-registry.org). The `epsg.schema`
-module provides an object model that closely maps to the GML which
-available as an export from the registry.
+module provides an object model that closely maps to the GML available
+as an export from the online registry.
+
+> Note that this package does *not* provide any functionality for
+> performing reprojections or coordinate transformations: its sole
+> purpose is to act as an API to access the data available at the EPSG
+> registry.
 
 The object model builds on [SQLAlchemy](http://sqlalchemy.org) to
 provide persistence and querying of the object model from within a SQL
 database.
 
-The `epsg.Registry` class provides functionality to import the online
-EPSG registry to a local SQL database: you can then query the database
-to return the objects you are interested in. See the `Registry` class
-for more information.
-
-## Example
+## Usage
 
 The `epsg.Registry` class represents a local database copy of the
-online EPSG registry. Objects in the GML representation of the EPSG
-export are mapped to their Python representatives and persisted in the
-database. The SQLAlchemy package is used to interact with the database
-and as such any database supported by SQLAlchemy can be used for a
-registry. The default is an in-memory sqlite database if no other
-database engine is passed in using the `engine` constructor
+online EPSG registry. The default is an in-memory sqlite database if
+no other database engine is passed in using the `engine` constructor
 argument. e.g.
 
     >>> from epsg import Registry
     >>> registry = Registry()   # use in-memory database
 
-The registry can be populated from the online EPSG registry at
-<http://www.epsg-registry.org>.
+This represents a blank database: it needs to have the schema created
+and populated. A blank registry will usually be populated from the
+online EPSG registry at <http://www.epsg-registry.org>. This is done
+using the following code, which replaces the database schema, connects
+to the remote EPSG registry to download the latest version in GML
+format and updates the local registry with that data:
 
-    >>> registry.create()       # this can take a while!
+    >>> registry.init()         # this can take a while!
 
-An existing database can be reset, which drops and updates it from the
-registry again:
+`epsg.Registry` implements the Python
+[`MutableMapping`](http://docs.python.org/library/collections.html#collections.MutableMapping)
+interface. Keys represent EPSG identifiers and the values are the
+objects themselves:
 
-    >>> registry.reset()
+    >>> epsg4326 = registry['urn:ogc:def:crs:EPSG::4326']
+    >>> print epsg4326
+    <GeodeticCRS('urn:ogc:def:crs:EPSG::4326','WGS 84')>
 
-Objects with specific ids can be retrieved:
+These objects can be introspected to provide access to the EPSG
+information:
 
-    >>> registry.queryByIdentifier('urn:ogc:def:crs:EPSG::27700')
+    >>> epsg4326.name
+    u'WGS 84'
+    >>> epsg4326.geodeticDatum.realizationEpoch
+    datetime.date(1984, 1, 1)
 
-Along with whole classes of objects:
+The object model is defined in `epsg.schema` but closely mirrors the
+EPSG GML format. The GML can be obtained from the online EPSG registry
+as follows:
 
-    >>> from epsg import schema
-    >>> registry.queryByClass(schema.GeodeticDatum)
+    >>> from epsg.service import Service
+    >>> service = Service()
+    >>> service.connect() # open an HTTP connection to the online registry
+    >>> gml = service.export() # get the GML as a string
 
-More complex queries can be performed by using the SQLAlchemy queries,
+Changes to the instances are persisted in the registry (and its
+underlying database):
+
+    >>> name = 'World Geodetic System 1984'
+    >>> epsg4326.name = name
+    >>> del epsg4326
+    >>> assert registry['urn:ogc:def:crs:EPSG::4326'] == name
+
+### Querying the registry
+
+Complex registry queries can be performed by using the SQLAlchemy API,
 based on objects in the `schema` module. This is done using the
 `Repository.session` property which is a `sqlalchemy.orm.Session`
-instance e.g.
+instance.
 
-    >>> registry.session.query(schema.Ellipsoid).filter_by(name='Airy 1830').first()
+The following obtains all `Ellipsoid` objects containing the case
+insensitive substring `airy`:
+
+    >>> from epsg import schema
+    >>> registry.session.query(schema.Ellipsoid).filter(schema.Ellipsoid.name.ilike('%airy%')).all()
+
+See
+[querying in SQLAlchemy](http://docs.sqlalchemy.org/en/latest/orm/tutorial.html#querying)
+for further details.
+
+### Loading registry data
+
+Registries can be initialised with specific data by using specific
+`Loader` instances. `Registry.getLoader` provides a shortcut for
+creating a loader from the latest data in the online registry: the
+following statements are equivalent:
+
+    # using the default `init`
+    >>> registry.init()
+
+    # using `getloader`
+    >>> loader = registry.getLoader()
+    >>> registry.init(loader)
+
+Loaders can be created from XML files...
+
+    >>> from epsg.load import XML, XMLLoader
+    >>> xml = XML.FromFile('./tests/test.xml')
+    >>> loader = XMLLoader(xml)
+    >>> loader.load() # create the objects from the XML
+
+...or from XML strings...
+
+    >>> xml = XML.FromString(gml)
+    >>> loader = XMLLoader(xml)
+    >>> loader.load()
+
+...which is equivalent to:
+
+    >>> loader = registry.getLoader(gml)
+
+### Copying registries
+
+`Registry` objects implement the `MutableMapping` interface which
+means they can be updated from other dictionary like objects that
+contain appropriate `epsg.schema` instances. `Registry` objects
+themselves provide the correct interface...
+
+    >>> registry2 = Registry()
+    >>> registry2.init(loader=False) # just the schema without any objects
+    >>> registry2.update(registry) # copy the registry
+    >>> assert len(registry2) == len(registry) # they are the same
+
+...as do `Loader` objects:
+
+    >>> registry2.update(loader)
+
+### Persisting registries
+
+For efficiency reasons an application will most likely not want to
+obtain its data from the online EPSG registry every time it needs to
+access the data. The solution is to use a SQLAlchemy database engine
+attached to a local, persistent database. The local database acts as a
+cache which can be updated as required:
+
+    >>> from sqlalchemy import create_engine
+    >>> engine = create_engine('sqlite:///./epsg-registry.sqlite')
+    >>> registry = Registry(engine)
+    >>> registry.init() # refresh as required
 
 ## Requirements
 
 - [Python](http://www.python.org): tested with Python 2.7.2
 - [SQLAlchemy](http://www.sqlalchemy.org): tested with SQLAlchemy 0.7.5
+
+## Download
+
+Current and previous versions of the software are available at
+<http://github.com/geo-data/python-epsg/tags>.
 
 ## Installation
 
@@ -71,7 +166,7 @@ distribution directory:
 It is recommended that you also run:
 
     python setup.py test
-    
+
 This exercises the comprehensive package test suite. Note that the
 tests require an internet connection to access the EPSG registry web
 service.

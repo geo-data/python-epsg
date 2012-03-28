@@ -154,10 +154,10 @@ class PrimeMeridian(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     greenwichLongitude = Column(Float, nullable=False)
 
 class AreaOfUse(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-    westBoundLongitude = Column(Float, nullable=False)
-    eastBoundLongitude = Column(Float, nullable=False)
-    southBoundLatitude = Column(Float, nullable=False)
-    northBoundLatitude = Column(Float, nullable=False)
+    westBoundLongitude = Column(Float)
+    eastBoundLongitude = Column(Float)
+    southBoundLatitude = Column(Float)
+    northBoundLatitude = Column(Float)
 
 class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     semiMajorAxis = Column(Float, nullable=False)
@@ -211,7 +211,7 @@ class CoordinateReferenceSystem(TypeMixin, ScopeMixin, DomainOfValidityMixin, Id
     """
     A Base class for a coordinate reference system
 
-    This should not be instantiated directly as it has not
+    This should not be instantiated directly as it has no
     corresponding GML entity.
     """
 

@@ -22,11 +22,11 @@ class TestXML(unittest.TestCase):
         value = self.xml['urn:ogc:def:datum:EPSG::6277']
         self.assertIsInstance(value, Element)
 
-class TestLoader(unittest.TestCase):
+class TestXMLLoader(unittest.TestCase):
 
     def setUp(self):
         xml = load.XML.FromFile(getTestFile())
-        self.loader = load.Loader(xml)
+        self.loader = load.XMLLoader(xml)
 
     def testPrimeMeridian(self):
         obj = self.loader['urn:ogc:def:meridian:EPSG::8901']
