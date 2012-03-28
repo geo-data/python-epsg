@@ -53,13 +53,34 @@ class TestAreaOfUse(TestDictionaryEntry):
 class TestEllipsoid(TestDictionaryEntry):
     pass
 
-class TestGeodeticDatum(TestDictionaryEntry):
+class DatumMixin(object):
+
+    def testDateValidation(self):
+        from datetime import date, datetime
+        if self.obj.realizationEpoch:
+            self.assertIsInstance(self.obj.realizationEpoch, date)
+
+        today = date.today()
+        now = datetime.now()
+        self.obj.realizationEpoch = today
+        self.assertEquals(self.obj.realizationEpoch, today)
+
+        self.obj.realizationEpoch = now
+        self.assertEquals(self.obj.realizationEpoch, today)
+
+        self.obj.realizationEpoch = str(today)
+        self.assertEquals(self.obj.realizationEpoch, today)
+
+        with self.assertRaises(TypeError):
+            self.obj.realizationEpoch = 99
+
+class TestGeodeticDatum(DatumMixin, TestDictionaryEntry):
     pass
 
-class TestVerticalDatum(TestDictionaryEntry):
+class TestVerticalDatum(DatumMixin, TestDictionaryEntry):
     pass
 
-class TestEngineeringDatum(TestDictionaryEntry):
+class TestEngineeringDatum(DatumMixin, TestDictionaryEntry):
     pass
 
 class TestGeodeticCRS(TestDictionaryEntry):

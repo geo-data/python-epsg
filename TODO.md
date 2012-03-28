@@ -1,7 +1,5 @@
 # TODO
 
-- Add a `@validates` decorator to numeric attributes to perform on the
-  fly conversions from strings.
 - The object model was created for the general requirements of a
   specific project: it is not the result of implementing the GML
   schema! This means that some attributes/elements may be missing but

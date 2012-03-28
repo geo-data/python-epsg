@@ -3,7 +3,7 @@ Classes representing the EPSG data schema
 """
 
 from sqlalchemy.ext.declarative import declarative_base, declared_attr, DeclarativeMeta
-from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey, event
 from sqlalchemy.orm import relationship, validates
 import datetime
 
@@ -48,6 +48,38 @@ class MetaBase(DeclarativeMeta):
 
 # Create a SQLAlchemy declarative base class using our metaclass
 Base = declarative_base(metaclass=MetaBase)
+
+# Attribute Event Validators
+#
+# See <http://docs.sqlalchemy.org/en/latest/orm/events.html> for
+# details.
+def _validate_date(target, value, oldvalue, initiator):
+    """
+    Ensure a date is in the correct format
+
+    Strings and datetime objects are converted to a date
+    object. Dates strings should be in the format 'YYYY-MM-DD'.
+    """
+
+    if isinstance(value, datetime.datetime):
+        return value.date()
+    elif isinstance(value, (datetime.date, type(None))):
+        return value
+    elif isinstance(value, (str, unicode)):
+        return datetime.datetime.strptime(value, '%Y-%m-%d').date()
+    else:
+        raise TypeError('Expected a date or datetime instance or a date string: %s' % value)
+
+def _validate_float(target, value, oldvalue, initiator):
+    """
+    Ensure a value is a float
+    """
+    try:
+        return float(value)
+    except TypeError, e:
+        if value is None:
+            return value
+        raise
 
 # Mixins
 
@@ -152,39 +184,30 @@ class DictionaryEntry(IdentifierJoinMixin('Identifier'), Identifier):
 
 class PrimeMeridian(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     greenwichLongitude = Column(Float, nullable=False)
+event.listen(PrimeMeridian.greenwichLongitude, 'set', _validate_float, propagate=True, retval=True)
 
 class AreaOfUse(DescriptionMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     westBoundLongitude = Column(Float)
     eastBoundLongitude = Column(Float)
     southBoundLatitude = Column(Float)
     northBoundLatitude = Column(Float)
+event.listen(AreaOfUse.westBoundLongitude, 'set', _validate_float, propagate=True, retval=True)
+event.listen(AreaOfUse.eastBoundLongitude, 'set', _validate_float, propagate=True, retval=True)
+event.listen(AreaOfUse.southBoundLatitude, 'set', _validate_float, propagate=True, retval=True)
+event.listen(AreaOfUse.northBoundLatitude, 'set', _validate_float, propagate=True, retval=True)
 
 class Ellipsoid(IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     semiMajorAxis = Column(Float, nullable=False)
     semiMinorAxis = Column(Float)
     inverseFlattening = Column(Float)
     isSphere = Column(String(50))
+event.listen(Ellipsoid.semiMajorAxis, 'set', _validate_float, propagate=True, retval=True)
+event.listen(Ellipsoid.semiMinorAxis, 'set', _validate_float, propagate=True, retval=True)
+event.listen(Ellipsoid.inverseFlattening, 'set', _validate_float, propagate=True, retval=True)
 
 class Datum(TypeMixin, ScopeMixin, DomainOfValidityMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
     realizationEpoch = Column(Date)
-    
-    @validates('realizationEpoch')
-    def validateDate(self, key, date):
-        """
-        Ensure a date is in the correct format
-
-        Strings and datetime objects are converted to a date
-        object. Dates strings should be in the format 'YYYY-MM-DD'.
-        """
-
-        if isinstance(date, (datetime.date, type(None))):
-            return date
-        if isinstance(date, (str, unicode)):
-            return datetime.datetime.strptime(date, '%Y-%m-%d').date()
-        elif isinstance(date, datetime.datetime):
-            return date.date()
-        else:
-            raise TypeError('Expected a date or datetime instance or a date string: %s' % date)
+event.listen(Datum.realizationEpoch, 'set', _validate_date, propagate=True, retval=True)
 
 class GeodeticDatum(IdentifierJoinMixin('Datum'), Datum):
     _primeMeridian_id = Column(String(255), ForeignKey('PrimeMeridian.identifier'))
