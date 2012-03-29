@@ -154,7 +154,8 @@ cache which can be updated as required:
 ## Download
 
 Current and previous versions of the software are available at
-<http://github.com/geo-data/python-epsg/tags>.
+<http://github.com/geo-data/python-epsg/tags> and
+<http://pypi.python.org/pypi/python-epsg>.
 
 ## Installation
 
