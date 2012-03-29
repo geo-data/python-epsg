@@ -27,14 +27,8 @@ argument. e.g.
     >>> from epsg import Registry
     >>> registry = Registry()   # use in-memory database
 
-This represents a blank database: it needs to have the schema created
-and populated. A blank registry will usually be populated from the
-online EPSG registry at <http://www.epsg-registry.org>. This is done
-using the following code, which replaces the database schema, connects
-to the remote EPSG registry to download the latest version in GML
-format and updates the local registry with that data:
-
-    >>> registry.init()         # this can take a while!
+This can take a while as data is retrieved from the online EPSG
+registry at <http://www.epsg-registry.org>.
 
 `epsg.Registry` implements the Python
 [`MutableMapping`](http://docs.python.org/library/collections.html#collections.MutableMapping)
@@ -94,12 +88,19 @@ Registries can be initialised with specific data by using specific
 creating a loader from the latest data in the online registry: the
 following statements are equivalent:
 
-    # using the default `init`
-    >>> registry.init()
+    # using the default loader upon initialisation
+    >>> registry2 = Registry()
 
-    # using `getloader`
+    # using `getloader` with the constructor
     >>> loader = registry.getLoader()
-    >>> registry.init(loader)
+    >>> registry2 = Registry(loader=loader)
+
+The `init` method can be used to completely re-create and re-populate
+a registry database:
+
+    >>> registry2.init() # use the default loader
+    >>> registry2.init(loader)  # specify a loader
+    >>> registry2.init(loader=False) # re-create but don't populate
 
 Loaders can be created from XML files...
 
@@ -118,21 +119,28 @@ Loaders can be created from XML files...
 
     >>> loader = registry.getLoader(gml)
 
-### Copying registries
+### Updating registries
 
 `Registry` objects implement the `MutableMapping` interface which
 means they can be updated from other dictionary like objects that
 contain appropriate `epsg.schema` instances. `Registry` objects
 themselves provide the correct interface...
 
-    >>> registry2 = Registry()
-    >>> registry2.init(loader=False) # just the schema without any objects
+    >>> registry2 = Registry(loader=false) # create an empty registry
     >>> registry2.update(registry) # copy the registry
     >>> assert len(registry2) == len(registry) # they are the same
 
 ...as do `Loader` objects:
 
     >>> registry2.update(loader)
+
+### Copying registries
+
+Copying registries is simply a case of initialising a registry with
+another registry or loader:
+
+    >>> registry2 = Registry(loader=registry)
+    >>> registry2 = Registry(loader=loader)
 
 ### Persisting registries
 
@@ -148,7 +156,7 @@ cache which can be updated as required:
     >>> registry.init() # refresh as required
 """
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 import schema, load, service
 from collections import MutableMapping
@@ -169,21 +177,27 @@ class Registry(MutableMapping):
 
     >>> from epsg import Registry
     >>> registry = Registry()   # use in-memory database
-    >>> registry.init()         # populate the registry
     """
 
-    def __init__(self, engine=None):
+    def __init__(self, engine=None, loader=None):
         from sqlalchemy.orm import sessionmaker
+        from sqlalchemy.engine import Engine
 
         if engine is None:
             from sqlalchemy import create_engine
             # create an in-memory sqlite database as default
             self.engine = create_engine('sqlite:///:memory:')
+        elif not isinstance(engine, Engine):
+            raise TypeError('Wrong type for `engine` argument: %s' % type(engine))
         else:
             self.engine = engine
 
         Session = sessionmaker(self.engine, autocommit=True)
         self.session = Session()
+
+        # Initialise the database if required
+        if not self.isInitialised() or loader:
+            self.init(loader)
 
     def __repr__(self):
         return '<Registry(%s)>' % repr(str(self.engine.url))
@@ -284,6 +298,18 @@ class Registry(MutableMapping):
 
             if loader is not False:
                 self.update(loader)
+
+    def isInitialised(self):
+        """
+        Return True if the required database schema is present
+        """
+
+        with self.session.begin(subtransactions=True):
+            conn = self.session.connection()
+            for table in schema.Base.metadata.tables.itervalues():
+                if not table.exists(conn):
+                    return False
+        return True
 
     def getLoader(self, gml=None):
         """

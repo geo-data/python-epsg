@@ -7,7 +7,7 @@ from util import getTestFile, SchemaBuilder
 class TestRegistryInit(unittest.TestCase):
 
     def setUp(self):
-        self.registry = Registry()
+        self.registry = Registry(loader=False)
         xml = load.XML.FromFile(getTestFile())
         self.loader = load.XMLLoader(xml)
         self.loader.load()
@@ -32,11 +32,10 @@ class TestRegistryInit(unittest.TestCase):
 class TestRegistry(unittest.TestCase):
 
     def setUp(self):
-        self.registry = Registry()
         xml = load.XML.FromFile(getTestFile())
         loader = load.XMLLoader(xml)
         loader.load()
-        self.registry.init(loader)
+        self.registry = Registry(loader=loader)
 
     def testGetItem(self):
         value = self.registry['urn:ogc:def:crs:EPSG::27700']
@@ -66,8 +65,7 @@ class TestRegistry(unittest.TestCase):
         self.assertEqual(45, len(self.registry))
 
     def testUpdate(self):
-        registry2 = Registry()
-        registry2.init(loader=False)
+        registry2 = Registry(loader=False)
         registry2.update(self.registry)
         self.assertEqual(len(self.registry), len(registry2))
 
