@@ -19,7 +19,7 @@ class TestCommand(Command):
         import os.path
         from unittest import TestLoader, TextTestRunner
 
-        test_dir = os.path.join(os.path.dirname(__file__), 'tests')
+        test_dir = os.path.join(os.path.dirname(__file__), 'test')
         package_suite = TestLoader().discover(test_dir)
         TextTestRunner(verbosity=2).run(package_suite)
 
