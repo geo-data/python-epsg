@@ -55,6 +55,27 @@ as follows:
     >>> service.connect() # open an HTTP connection to the online registry
     >>> gml = service.export() # get the GML as a string
 
+The following classes compose the object model:
+
+    >>> set((type(v) for v in registry.itervalues()))
+    set([<class 'epsg.schema.PrimeMeridian'>,
+         <class 'epsg.schema.AreaOfUse'>,
+         <class 'epsg.schema.Ellipsoid'>,
+         <class 'epsg.schema.GeodeticDatum'>,
+         <class 'epsg.schema.VerticalDatum'>,
+         <class 'epsg.schema.EngineeringDatum'>,
+         <class 'epsg.schema.GeodeticCRS'>,
+         <class 'epsg.schema.EllipsoidalCS'>,
+         <class 'epsg.schema.CartesianCS'>,
+         <class 'epsg.schema.VerticalCS'>,
+         <class 'epsg.schema.SphericalCS'>,
+         <class 'epsg.schema.EngineeringCRS'>,
+         <class 'epsg.schema.CoordinateSystemAxis'>,
+         <class 'epsg.schema.AxisName'>,
+         <class 'epsg.schema.ProjectedCRS'>,
+         <class 'epsg.schema.VerticalCRS'>,
+         <class 'epsg.schema.CompoundCRS'>])
+
 Changes to the instances are persisted in the registry (and its
 underlying database):
 
