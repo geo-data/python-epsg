@@ -4,7 +4,7 @@ Classes representing the EPSG data schema
 
 from sqlalchemy.ext.declarative import declarative_base, declared_attr, DeclarativeMeta
 from sqlalchemy import Table, Column, Integer, String, Date, Float, ForeignKey, event
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy.orm import relationship
 import datetime
 
 # see http://stackoverflow.com/questions/4460830/enhance-sqlalchemy-syntax-for-polymorphic-identity
