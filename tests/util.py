@@ -275,7 +275,7 @@ class SchemaBuilder(object):
         if properties:
             default_properties.update(properties)
 
-        return self.buildDictionaryEntry(schema.AxisName, properties)
+        return self.buildDictionaryEntry(schema.AxisName, default_properties)
 
     def buildProjectedCRS(self):
         obj = self.buildDictionaryEntry(schema.ProjectedCRS, {

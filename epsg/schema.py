@@ -3,7 +3,7 @@ Classes representing the EPSG data schema
 """
 
 from sqlalchemy.ext.declarative import declarative_base, declared_attr, DeclarativeMeta
-from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey, event
+from sqlalchemy import Table, Column, Integer, String, Date, Float, ForeignKey, event
 from sqlalchemy.orm import relationship, validates
 import datetime
 
@@ -32,9 +32,14 @@ class MetaBase(DeclarativeMeta):
 
             return (
                 self.__class__ == other.__class__ and
-                compareAttrs()
+                compareAttrs() is True
                 )
         dct['__eq__'] = eq
+
+        # Add the inequality operator
+        def ne(self, other):
+            return not eq(self, other)
+        dct['__ne__'] = ne
 
         # Add the polymorphic identity, based on the class name
         if '_decl_class_registry' not in dct:
@@ -253,11 +258,17 @@ class GeodeticCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateRe
         uselist=False
         )
 
+# Many to Many association between `CoordinateSystem` and
+# `CoordinateSystemAxis`
+_axes_association_table = Table('axes_association', Base.metadata,
+    Column('left_id', String(255), ForeignKey('CoordinateSystem.identifier')),
+    Column('right_id', String(255), ForeignKey('CoordinateSystemAxis.identifier'))
+)
+
 class CoordinateSystem(TypeMixin, IdentifierJoinMixin('DictionaryEntry'), DictionaryEntry):
-    _axis_id = Column(String(255), ForeignKey('CoordinateSystemAxis.identifier'))
     axes = relationship(
         "CoordinateSystemAxis",
-        primaryjoin = 'CoordinateSystem._axis_id==CoordinateSystemAxis.identifier',
+        secondary=_axes_association_table,
         uselist=True
         )
 
