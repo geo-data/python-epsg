@@ -297,6 +297,14 @@ class ProjectedCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateR
         uselist=False
         )
 
+    _cartesianCS_id = Column(String(255), ForeignKey('CartesianCS.identifier'))
+    cartesianCS = relationship(
+        "CartesianCS",
+        primaryjoin = 'ProjectedCRS._cartesianCS_id==CartesianCS.identifier',
+        foreign_keys = [_cartesianCS_id],
+        uselist=False
+        )
+
 class VerticalCRS(IdentifierJoinMixin('CoordinateReferenceSystem'), CoordinateReferenceSystem):
 
     _verticalDatum_id = Column(String(255), ForeignKey('VerticalDatum.identifier'))
