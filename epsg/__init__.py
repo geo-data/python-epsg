@@ -156,7 +156,7 @@ cache which can be updated as required:
     >>> registry.init() # refresh as required
 """
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 import schema, load, service
 from collections import MutableMapping
@@ -217,16 +217,6 @@ class Registry(MutableMapping):
             raise TypeError('String expected for key, found: %s' % type(key))
 
         value = self.session.query(schema.Identifier).filter_by(identifier=key).first()
-        if isinstance(value, schema.CompoundCRS):
-            # a workaround due to a failure of the above to query the
-            # `CompoundCRS` object. This is due to some bug in the
-            # declaration and mapping of `schema.CompoundCRS`. Once
-            # this is sorted out `iteritems` and `itervalues` can be
-            # overridden with more performant implementations that
-            # query the session directly, rather than indirectly using
-            # this fix.
-            value = self.session.query(schema.CoordinateReferenceSystem).filter_by(identifier=key).first()
-
         if not value:
             raise KeyError(key)
 
@@ -243,11 +233,9 @@ class Registry(MutableMapping):
             self.pop(key, None) # overwrite the existing key if any
 
             # refresh the value's attributes in case it has been
-            # lazily loaded in another session. This doesn't work for
-            # `schema.CompoundCRS` objects due to a bug (probably in
-            # how it is mapped using sqlalchemy).
+            # lazily loaded in another session.
             session = self.session.object_session(value)
-            if session and session != self.session and not isinstance(value, schema.CompoundCRS):
+            if session and session != self.session:
                 session.refresh(value)
 
             # use `merge` instead of `add` in case the value comes
@@ -266,6 +254,18 @@ class Registry(MutableMapping):
     def __iter__(self):
         for key in self.session.query(schema.Identifier.identifier):
             yield key[0]
+
+    # a more performant override of the default MutableMapping
+    # `itervalues` implementation
+    def itervalues(self):
+        for value in self.session.query(schema.Identifier):
+            yield value
+
+    # a more performant override of the default MutableMapping
+    # `iteritems` implementation
+    def iteritems(self):
+        for value in self.itervalues():
+            yield value.identifier, value
 
     # a more performant override of the default MutableMapping
     # `__contains__` implementation

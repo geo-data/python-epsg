@@ -42,20 +42,10 @@ class TestDictionaryEntry(unittest.TestCase):
         session1.add(self.obj)
         session1.commit()
 
-        # create a query class, working around a bug in
-        # `schema.CompoundCRS` that prevents the use of
-        # `schema.Identifier`.
-        if (isinstance(self.obj, schema.CompoundCRS)):
-            print 'here', self.obj
-            query_class = schema.CoordinateReferenceSystem
-        else:
-            query_class = schema.Identifier
-
         # query on session2 so we know we're using an object created
         # from scratch by sqlalchemy, not just returned from the
         # session1 cache.
-        results = list(session2.query(query_class).filter_by(identifier=self.obj.identifier))
-        print results
+        results = list(session2.query(schema.Identifier).filter_by(identifier=self.obj.identifier))
         self.assertEqual(len(results), 1)
         obj = results[0]
         self.assertEqual(self.obj, obj)

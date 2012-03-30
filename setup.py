@@ -25,7 +25,7 @@ class TestCommand(Command):
 
 setup(name='python-epsg',
       version=__version__,
-      description='An interface to the EPSG projection database at http://www.epsg-registry.org',
+      description='An interface to the EPSG Geodetic Parameter Dataset at http://www.epsg-registry.org',
       author='Homme Zwaagstra',
       author_email='hrz@geodata.soton.ac.uk',
       url='http://github.com/geo-data/python-epsg',

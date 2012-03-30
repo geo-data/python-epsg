@@ -69,5 +69,34 @@ class TestRegistry(unittest.TestCase):
         registry2.update(self.registry)
         self.assertEqual(len(self.registry), len(registry2))
 
+    def testContains(self):
+        self.assertIn('urn:ogc:def:crs:EPSG::27700', self.registry)
+        self.assertNotIn('invalid key', self.registry)
+
+    def testIter(self):
+        count = 0
+        for key in self.registry:
+            self.assertIsInstance(key, (str, unicode))
+            count += 1
+        self.assertEqual(45, count)
+
+    def testItervalues(self):
+        count = 0
+        for value in self.registry.itervalues():
+            self.assertIsInstance(value, schema.Identifier)
+            count += 1
+        self.assertEqual(45, count)
+
+    def testIteritems(self):
+        count = 0
+        for item in self.registry.iteritems():
+            self.assertIsInstance(item, tuple)
+            self.assertEqual(2, len(item))
+            key, value = item
+            self.assertIsInstance(key, (str, unicode))
+            self.assertIsInstance(value, schema.Identifier)
+            count += 1
+        self.assertEqual(45, count)
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
