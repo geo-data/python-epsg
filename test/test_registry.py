@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import unittest
 from epsg import Registry, schema, load
-from util import getTestFile, SchemaBuilder
+from test import unittest, getTestFile, SchemaBuilder
 
 class TestRegistryInit(unittest.TestCase):
 

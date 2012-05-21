@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from epsg import load, schema
-import unittest
-from util import getTestFile
+from test import unittest, getTestFile
 
 class TestXML(unittest.TestCase):
 

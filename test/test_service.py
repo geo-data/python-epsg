@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from epsg import service
-import unittest
+from test import unittest
 
 class TestService(unittest.TestCase):
 

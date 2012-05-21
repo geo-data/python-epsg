@@ -3,8 +3,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from epsg import schema
-import unittest
-from util import SchemaBuilder
+from test import unittest, SchemaBuilder
 
 class TestDictionaryEntry(unittest.TestCase):
     """

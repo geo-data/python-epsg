@@ -114,6 +114,52 @@ download_xml = """<?xml version="1.0" encoding="UTF-8"?>
 </GetRecords>
 """
 
+def _setZipMethod(new):
+    """
+    Set the correct zip file method depending on the Python version
+
+    A different method for dealing with opening zipfiles is used
+    depending on if the Python version is less than 2.7.
+
+    Warning: Only decorate the __new__() method with this decorator
+    """
+    if new.__name__ != '__new__':
+        return new  # Return an unchanged method
+
+    from sys import version_info
+    import zipfile
+
+    def __new__(cls, *args, **kws):
+        if version_info[0] == 2 and version_info[1] < 7:
+            def _openZipFile(self, zfh):
+                """
+                Open a file handle as a zipfile
+                """
+                zh = zipfile.ZipFile(zfh, 'r')
+                if self.gmlExportName not in zh.namelist():
+                    raise ValueError('The required GML file is not present in the zip export: %s' % self.gmlExportName)
+                fh = zh.open(self.gmlExportName, 'r')
+                gml = fh.read()
+                zh.close()
+                return gml
+        else:
+            def _openZipFile(self, zfh):
+                """
+                Open a file handle as a zipfile
+                """
+                with zipfile.ZipFile(zfh, 'r') as zh:
+                    if self.gmlExportName not in zh.namelist():
+                        raise ValueError('The required GML file is not present in the zip export: %s' % self.gmlExportName)
+
+                    fh = zh.open(self.gmlExportName, 'r')
+                    gml = fh.read()
+                    return gml
+
+        cls._openZipFile = _openZipFile
+
+        return super(cls.__class__, cls).__new__(cls, *args, **kws)
+    return __new__
+
 class Service(object):
     """
     Represents the EPSG web service
@@ -130,6 +176,9 @@ class Service(object):
 
     # the name of the GML file in the EPSG zip export
     gmlExportName = 'GmlDictionary.xml'
+
+    @_setZipMethod
+    def __new__(): pass
 
     def __init__(self, url='http://www.epsg-registry.org/indicio/query'):
         self.url = url
@@ -182,7 +231,7 @@ class Service(object):
         """
         Export the EPSG repository data as GML
         """
-        import zipfile, tempfile
+        import tempfile
 
         # get the url to query
         url = self.getExportURL()
@@ -201,13 +250,7 @@ class Service(object):
             tmp_fh.seek(0)
 
             # open the temporary file as a zipfile
-            with zipfile.ZipFile(tmp_fh, 'r') as zh:
-                if self.gmlExportName not in zh.namelist():
-                    raise ValueError('The required GML file is not present in the zip export: %s' % self.gmlExportName)
-
-                fh = zh.open(self.gmlExportName, 'r')
-                gml = fh.read()
-                return gml
+            return self._openZipFile(tmp_fh)
 
     def __repr__(self):
         return '<Service(%s)>' % repr(self.url)
