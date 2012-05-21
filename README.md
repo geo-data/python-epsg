@@ -1,5 +1,7 @@
 # Python EPSG
 
+[![Build Status](https://secure.travis-ci.org/geo-data/python-epsg.png)](http://travis-ci.org/geo-data/python-epsg)
+
 ## Overview
 
 This package provides an API for accessing the data in the
@@ -177,8 +179,8 @@ cache which can be updated as required:
 
 ## Requirements
 
-- [Python](http://www.python.org): tested with Python 2.7.2
-- [SQLAlchemy](http://www.sqlalchemy.org): tested with SQLAlchemy 0.7.{5,6}
+- [Python](http://www.python.org) == 2.{6,7}
+- [SQLAlchemy](http://www.sqlalchemy.org) >= 0.7.5
 
 ## Download
 
