@@ -28,8 +28,8 @@ class XML(Mapping):
 
     def __init__(self, dom):
         self.dom = dom
-        self.map = self.createMapping()
         self.ns = self.getNamespaces()
+        self.map = self.createMapping()
 
     def getNamespaces(self):
         return dict(((k[6:], v) for k, v in self.dom.firstChild.attributes.items() if k.startswith('xmlns:')))
@@ -39,11 +39,25 @@ class XML(Mapping):
         Creates a mapping between URNs and XML objects
         """
         mapping = {}
-        for element in self.dom.getElementsByTagName('identifier'):
+        for element in self.getElementsByTagName('identifier'):
             urn = getText(element)
             mapping[urn] = element.parentNode
 
         return mapping
+
+    def getElementsByTagName(self, name, node=None, ns=None):
+        """
+        Retrieve a GML element from the dom by its tag name
+
+        Optionally specify an alternative node instead of the dom
+        and/or specify a namespace other than GML to query.
+        """
+        if ns is None:
+            ns = 'gml'
+        if node is None:
+            node = self.dom
+        ns_uri = self.ns[ns]
+        return node.getElementsByTagNameNS(ns_uri, name)
 
     def __getitem__(self, key):
         return self.map[key]
@@ -90,7 +104,7 @@ def addType(method):
     """
     def wrapper(self, element, *args, **kwargs):
         instance = method(self, element, *args, **kwargs)
-        instance.type = self.getFirstChildNodeText(element, 'epsg:type')
+        instance.type = self.getFirstChildNodeText(element, 'type', 'epsg')
         return instance
     return wrapper
 
@@ -154,15 +168,15 @@ class XMLLoader(Mapping):
     def items(self):
         return self.objects.items()
 
-    def getFirstChildNodeText(self, node, childName):
+    def getFirstChildNodeText(self, node, childName, ns=None):
         try:
-            return getText(node.getElementsByTagName(childName)[0])
+            return getText(self.xml.getElementsByTagName(childName, node, ns)[0])
         except IndexError:
             return None
 
-    def getFirstChildAttributeValue(self, node, childName, attributeName):
+    def getFirstChildAttributeValue(self, node, childName, attributeName, ns=None):
         try:
-            return node.getElementsByTagName(childName)[0].attributes[attributeName].value
+            return self.xml.getElementsByTagName(childName, node, ns)[0].attributes[attributeName].value
         except (KeyError, IndexError):
             return None
 
@@ -184,7 +198,7 @@ class XMLLoader(Mapping):
         instance = class_(identifier, name)
         instance.remarks = self.getFirstChildNodeText(element, 'remarks')
         instance.anchorDefinition = self.getFirstChildNodeText(element, 'anchorDefinition')
-        instance.informationSource = self.getFirstChildNodeText(element, 'epsg:informationSource')
+        instance.informationSource = self.getFirstChildNodeText(element, 'informationSource', 'epsg')
 
         return instance
 
@@ -258,8 +272,8 @@ class XMLLoader(Mapping):
     def loadCoordinateSystem(self, element, class_):
         instance = self.loadDictionaryEntry(element, class_)
         axes = []
-        for axisNode in element.getElementsByTagName('axis'):
-            node = axisNode.getElementsByTagName('identifier')[0]
+        for axisNode in self.xml.getElementsByTagName('axis', element):
+            node = self.xml.getElementsByTagName('identifier', axisNode)[0]
             urn = getText(node)
             axis = self[urn]
             axes.append(axis)
@@ -306,7 +320,7 @@ class XMLLoader(Mapping):
     def loadCompoundCRS(self, element):
         instance = self.loadCoordinateReferenceSystem(element, schema.CompoundCRS)
         components = []
-        for componentNode in element.getElementsByTagName('componentReferenceSystem'):
+        for componentNode in self.xml.getElementsByTagName('componentReferenceSystem', element):
             urn = componentNode.attributes['xlink:href'].value
             crs = self[urn]
             components.append(crs)
