@@ -177,7 +177,7 @@ cache which can be updated as required:
     >>> registry.init() # refresh as required
 """
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 import schema, load, service
 from collections import MutableMapping

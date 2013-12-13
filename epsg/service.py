@@ -215,15 +215,20 @@ class Service(object):
         Return the URL for exporting the latest repository export
         """
 
-        version = self.getLatestVersion()
-        xmlBody = download_xml % version
-        self._conn.request('POST', self._parsedUrl.path, xmlBody, {'Content-Type': 'appliation/xml'})
-        response = self._conn.getresponse()
-        xmlResponse = response.read()
-        dom = parseString(xmlResponse)
+        #version = self.getLatestVersion()
+        #xmlBody = download_xml % version
+        #self._conn.request('POST', self._parsedUrl.path, xmlBody, {'Content-Type': 'appliation/xml'})
+        #response = self._conn.getresponse()
+        #xmlResponse = response.read()
+        #dom = parseString(xmlResponse)
+        #
+        #element = dom.getElementsByTagName('wrs:repositoryItemRef')[0]
+        #url = element.attributes['xlink:href'].value
 
-        element = dom.getElementsByTagName('wrs:repositoryItemRef')[0]
-        url = element.attributes['xlink:href'].value
+        # As of 2013-12-13 the web service API no longer returned
+        # export URLs.  However, the following URL extracted from the
+        # EPSG registry web interface provides the latest export:
+        url = 'http://www.epsg-registry.org/export.htm?contentType=WithEPSG'
 
         return url
 
