@@ -182,15 +182,16 @@ cache which can be updated as required:
 - [Python](http://www.python.org) == 2.{6,7}
 - [SQLAlchemy](http://www.sqlalchemy.org) >= 0.7.5
 
-## Download
-
-Current and previous versions of the software are available at
-<http://github.com/geo-data/python-epsg/tags> and
-<http://pypi.python.org/pypi/python-epsg>.
-
 ## Installation
 
-Download and unpack the source, then run the following from the root
+### From PyPI
+
+    pip install python-epsg
+
+### From source
+
+Download the source from either <http://github.com/geo-data/python-epsg/tags> or
+<http://pypi.python.org/pypi/python-epsg>, then run the following from the root
 distribution directory:
 
     python setup.py install

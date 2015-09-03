@@ -29,7 +29,9 @@ setup(name='python-epsg',
       author='Homme Zwaagstra',
       author_email='hrz@geodata.soton.ac.uk',
       url='http://github.com/geo-data/python-epsg',
+      download_url='https://github.com/geo-data/python-epsg/tarball/v%s' % __version__,
       license='BSD',
       packages=['epsg'],
+      keywords = ['epsg'],
       cmdclass = { 'test': TestCommand }
      )
