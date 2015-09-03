@@ -46,6 +46,11 @@ class TestXMLLoader(unittest.TestCase):
     def testAreaOfUse(self):
         obj = self.loader['urn:ogc:def:area:EPSG::1264']
         self.assertIsInstance(obj, schema.AreaOfUse)
+        self.assertEqual(len(obj.description), 131)
+        self.assertEqual(obj.westBoundLongitude, -8.73)
+        self.assertEqual(obj.eastBoundLongitude, 1.83)
+        self.assertEqual(obj.northBoundLatitude, 60.89)
+        self.assertEqual(obj.southBoundLatitude, 49.81)
 
     def testEllipsoid(self):
         obj = self.loader['urn:ogc:def:ellipsoid:EPSG::7001']

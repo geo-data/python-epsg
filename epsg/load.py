@@ -32,7 +32,15 @@ class XML(Mapping):
         self.map = self.createMapping()
 
     def getNamespaces(self):
-        return dict(((k[6:], v) for k, v in self.dom.firstChild.attributes.items() if k.startswith('xmlns:')))
+        """Return a dictionary of EPSG namespaces
+
+        The value (namespace URI) is mapped to a key for referencing by the
+        application.
+        """
+        ns = dict(((k[6:], v) for k, v in self.dom.firstChild.attributes.items() if k.startswith('xmlns:')))
+        # A hack to find the gmd namespace in use:
+        ns[u'gmd'] = self.dom.getElementsByTagName('gmd:westBoundLongitude')[0].namespaceURI
+        return ns
 
     def createMapping(self):
         """
@@ -56,6 +64,7 @@ class XML(Mapping):
             ns = 'gml'
         if node is None:
             node = self.dom
+
         ns_uri = self.ns[ns]
         return node.getElementsByTagNameNS(ns_uri, name)
 
@@ -239,11 +248,11 @@ class XMLLoader(Mapping):
 
     def loadAreaOfUse(self, element):
         instance = self.loadDictionaryEntry(element, schema.AreaOfUse)
-        instance.description = self.getFirstChildNodeText(element, 'gmd:description')
-        instance.westBoundLongitude = self.getFirstChildNodeText(element, 'gmd:westBoundLongitude')
-        instance.eastBoundLongitude = self.getFirstChildNodeText(element, 'gmd:eastBoundLongitude')
-        instance.southBoundLatitude = self.getFirstChildNodeText(element, 'gmd:southBoundLatitude')
-        instance.northBoundLatitude = self.getFirstChildNodeText(element, 'gmd:northBoundLatitude')
+        instance.description = self.getFirstChildNodeText(element, 'description', 'gmd')
+        instance.westBoundLongitude = self.getFirstChildNodeText(element, 'westBoundLongitude', 'gmd')
+        instance.eastBoundLongitude = self.getFirstChildNodeText(element, 'eastBoundLongitude', 'gmd')
+        instance.southBoundLatitude = self.getFirstChildNodeText(element, 'southBoundLatitude', 'gmd')
+        instance.northBoundLatitude = self.getFirstChildNodeText(element, 'northBoundLatitude', 'gmd')
 
         return instance
 

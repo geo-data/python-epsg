@@ -32,6 +32,14 @@ class TestDictionaryEntry(unittest.TestCase):
 
         session.commit()
 
+    def assertInsert(self, obj):
+        """
+        Ensure the object inserted is as expected
+
+        This is intended to be overridden by subclasses.
+        """
+        self.assertEqual(self.obj, obj)
+
     def testInsert(self):
         session1 = self.Session()
         session2 = self.Session()
@@ -47,13 +55,18 @@ class TestDictionaryEntry(unittest.TestCase):
         results = list(session2.query(schema.Identifier).filter_by(identifier=self.obj.identifier))
         self.assertEqual(len(results), 1)
         obj = results[0]
-        self.assertEqual(self.obj, obj)
+        self.assertInsert(obj)
 
 class TestPrimeMeridian(TestDictionaryEntry):
     pass
 
 class TestAreaOfUse(TestDictionaryEntry):
-    pass
+    def assertInsert(self, obj):
+        super(TestAreaOfUse, self).assertInsert(obj)
+        self.assertEqual(obj.westBoundLongitude, -8.73)
+        self.assertEqual(obj.eastBoundLongitude, 1.83)
+        self.assertEqual(obj.southBoundLatitude, 49.81)
+        self.assertEqual(obj.northBoundLatitude, 60.89)
 
 class TestEllipsoid(TestDictionaryEntry):
     pass
