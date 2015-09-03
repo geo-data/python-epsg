@@ -267,7 +267,6 @@ class Registry(MutableMapping):
         value = self[key]
         self.session.delete(value)
         self.session.flush()
-        self.session.expunge(value)
 
     def __len__(self):
         return self.session.query(schema.Identifier).count()
