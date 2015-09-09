@@ -93,11 +93,20 @@ based on objects in the `schema` module. This is done using the
 `Repository.session` property which is a `sqlalchemy.orm.Session`
 instance.
 
-The following obtains all `Ellipsoid` objects containing the case
-insensitive substring `airy`:
+* Obtain all `Ellipsoid` objects containing the case insensitive substring
+  `airy`:
 
     >>> from epsg import schema
     >>> registry.session.query(schema.Ellipsoid).filter(schema.Ellipsoid.name.ilike('%airy%')).all()
+
+* Get a particular projected coordinate reference system:
+
+    >>> registry.session.query(schema.ProjectedCRS).filter_by(identifier = 'urn:ogc:def:crs:EPSG::6594').first()
+
+* Find out how many coordinate reference systems are contained within the
+  longitudes of -76 and -75:
+
+    >>> registry.session.query(schema.ProjectedCRS).join(schema.ProjectedCRS.domainOfValidity).filter(schema.AreaOfUse.eastBoundLongitude.between(-76,-75), schema.AreaOfUse.westBoundLongitude.between(-76,-75)).count()
 
 See
 [querying in SQLAlchemy](http://docs.sqlalchemy.org/en/latest/orm/tutorial.html#querying)
